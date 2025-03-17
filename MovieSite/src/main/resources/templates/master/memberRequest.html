@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 요청사항 관리</title>
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/movieListStyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+	<style>
+		.main {
+		  text-align: center;
+		}
+		
+		table {
+		  border-collapse: collapse;
+		  width: 1000px;
+		  margin: 1rem auto;
+		  background-color: white;
+		}
+		
+		/* 테이블 행 */
+		th, td {
+		  padding: 5px;
+		  text-align: center;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		}
+		
+		th {
+		  background-color: #1b1b1b;
+		  color:white;
+		  padding:5px;
+		}
+		
+		/* 테이블 올렸을 때 */
+		tbody tr:hover {
+		  background-color: #d3d3d3;
+		  opacity: 0.9;
+		  cursor: pointer;
+		}
+		
+		/* 테이블 비율 */
+		th:nth-child(1),
+		td:nth-child(1) {
+		  width: 5%;
+		}
+		
+		th:nth-child(2),
+		td:nth-child(2) {
+		  width: 50%;
+		}
+		
+		th:nth-child(3),
+		td:nth-child(3) {
+		  width: 12%;
+		}
+		
+		th:nth-child(4),
+		td:nth-child(4) {
+		  width: 23%;
+		}
+		
+		th:nth-child(5),
+		td:nth-child(5) {
+		  width: 10%;
+		}
+		
+		tr:nth-child(even) {
+		  background-color: #4dbf0010;
+		}
+		
+		.pending-highlight {
+		    color: #FF6384; /* 빨간색으로 강조 */
+		    opacity: 1;
+  			animation: animate 1s infinite;
+		}
+		
+		@keyframes animate {
+		  0% {opacity: 1;}
+		  50% {opacity: 0.8;}
+		  100% {opacity: 1;}
+		}
+		
+	</style>
+	<script>
+		const search = () => {
+			const keyword = document.querySelector('#keyword');
+			document.location.href='/master/memberRequest?page=1&keyword=' + keyword.value;
+		}
+	
+		const press = () => {
+			if(event.keyCode == 13) search();
+		}
+	</script>
+</head>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+<div th:replace="~{fragments/nav/masterMenubar}"></div>
+<br><br><br><br><br>
+<div class = "main">
+	<h2>회원 요청 사항</h2>
+	
+	<br>
+	<input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:28px;border:2px solid #4dbf00;font-size: 15px;border-radius:10px"
+         		placeholder=" 검색할 제목 혹은 내용을 입력하세요." onkeydown="press()"> &nbsp;
+    <input type="button" value="검색" 
+             style="width:5%;height:33px;background:#4dbf00;color:white; border-radius:10px;border:none;font-weight:bold;cursor:pointer;"
+             	onclick="search()">		
+	<br><br>
+		 
+	<table class="table table-sm">
+	  <thead class="table-light">
+	    <tr>
+	      <th scope="col">번호</th>
+	      <th scope="col">제목</th>
+	      <th scope="col">작성자</th>
+	      <th scope="col">작성일</th>
+	      <th scope="col">처리 상태</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <th:block th:if="${#strings.equals(listIsEmpty, 'N')}">     
+	            <tr th:each="list,index:${list}">
+	                <td th:text="${totalElement - (page-1)*postNum - index.count + 1}"></td>
+	                <td style="text-align: center;">
+	                	<a th:href="@{'/master/memberRequestView?seqno=' + ${list.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword}}" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${list.title}"></span>
+	                   	</a>
+	                </td>
+	                <td th:text="${list.email}"></td>
+	                <td th:text="${#temporals.format(list.reqdate,'yyyy-MM-dd HH:mm:ss')}"></td>	                	
+	                <th:block th:if="${#strings.equals(list.status, 'PENDING')}">     
+	                	<td class="pending-highlight" th:text="${list.status}"></td>
+	                </th:block>
+	                <th:block th:if="${#strings.equals(list.status, 'COMPLETED')}">   
+	                   <td th:text="${list.status}"></td>
+	                </th:block>
+	            </tr>
+			</th:block>
+			<th:block th:if="${#strings.equals(listIsEmpty, 'Y')}">
+				<td colspan="5">등록된 게시물이 없습니다.</td>
+			</th:block>
+	    
+	    
+	    
+	    
+	  </tbody>
+	</table>
+	
+	<div>[(${pageList})]</div>
+	<br><br>
+</div>
+
+
+</body>
+</html>

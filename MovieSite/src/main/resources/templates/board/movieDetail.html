@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html
+  lang="ko"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/movieDetailStyle.css" />
+    <th:block th:replace="~{fragments/header}"></th:block>
+    <script src="/js/detail.js" defer></script>
+    <title th:text="${movie.info.title}">영화 상세</title>
+  </head>
+  <body>
+    <!--replace 특정 템플릿 조각(프래그먼트)을 다른 위치에 삽입할 때 사용 -->
+    <th:block th:if="${#strings.equals(role, 'USER')}">
+      <div th:replace="~{fragments/nav/menubar}"></div>
+    </th:block>
+    <th:block th:if="${#strings.equals(role, 'MASTER')}">
+      <div
+        th:replace="~{fragments/nav/masterBoardMenubar}"
+      ></div>
+    </th:block>
+
+    <div class="movie-container">
+      <!-- 영화 정보 -->
+      <div
+        class="featured-content featured-background"
+        th:style="'background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 70%, rgba(0, 0, 0, 0.8) 100%), url(https://image.tmdb.org/t/p/original' + ${movie.info.backdropPath} + '); 
+        background-size: cover; 
+        background-position: center;
+        min-height: 60vh;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;'"
+      >
+        <div
+          class="featured-desc"
+          style="flex: 1; min-width: 300px; max-width: 800px; padding: 0 1rem"
+        >
+          <p class="#" style="font-size: small; color: white">
+            <!-- 제목위 미니정보 -->
+            <span th:text="${movie.info.certification}"></span>
+            <span
+              class="movie-category"
+              th:each="genre, iterStat : ${movie.genre}"
+              th:text="${genre.name} + (${iterStat.last} ? '' : '/')"
+            >
+            </span>
+            <span
+              class="movie-category"
+              th:text="'  |  ' +${movie.info.runtime + '분'}"
+            ></span>
+            <span
+              class="movie-category"
+              th:text="'  |  ' + ${#temporals.format(movie.info.releaseDate, 'yyyy-MM-dd')}"
+            ></span>
+          </p>
+          <!-- 제목위 미니정보 -->
+          <h1
+            class="movie-title"
+            th:text="${movie.info.title}"
+            style="display: inline"
+          ></h1>
+          <span
+            class="movie-subtitle"
+            th:text="${movie.info.originalTitle}"
+          ></span>
+
+          <button
+            style="width: 50px; height: auto"
+            th:if="${#strings.equals(role, 'MASTER')}"
+            th:onclick="location.href='/master/movieUpload?keyword=' + [[${movie.info.title}]]"
+          >
+            수정
+          </button>
+          <br />
+          <p class="movie-subtitle" th:text="${movie.info.tagline}"></p>
+          <hr />
+          <br />
+          <p class="movie-description" th:text="${movie.info.overview}"></p>
+          <br />
+          <h2>
+            TMDB 평점: <span th:text="${movie.info.voteAverage}"></span> (투표
+            수: <span th:text="${movie.info.voteCount}"></span>)
+          </h2>
+          <span th:text="'영화 클릭 수 : ' + ${movie.info.hitno}"></span>
+          <br />
+          <button
+            class="rent-btn"
+            th:data-price="${movie.info.price}"
+            th:text="${rent != null and 'Y' == rent['status']} ? '대여 중' : '대여하기 (' + ${movie.info.price} + '원)'"
+            th:disabled="${rent != null and 'Y' == rent['status']}"
+            th:classappend="${rent != null and 'Y' == rent['status']} ? 'disabled' : ''"
+          ></button>
+          <a
+            th:if="${rent != null and 'Y' == rent['status']}"
+            th:href="${#lists.size(movie.video) > 0} ? @{'https://www.youtube.com/watch?v=' + ${movie.video[0].key}} : '#'"
+            th:target="${#lists.size(movie.video) > 0} ? '_blank' : '_self'"
+            style="color: white; text-decoration: none"
+          >
+            <button
+              class="trailer-btn"
+              th:disabled="${#lists.size(movie.video) == 0}"
+            >
+              <p
+                style="color: white"
+                th:text="${#lists.size(movie.video) > 0} ? '재생하기' : '영상 없음'"
+              ></p>
+            </button>
+          </a>
+        </div>
+        <aside class="poster-container">
+          <!-- 포스터 + 버튼 영역 -->
+          <img
+            class="movie-poster"
+            th:if="${movie.info.posterPath}"
+            th:src="${'https://image.tmdb.org/t/p/original' + movie.info.posterPath}"
+            th:alt="${movie.info.title}"
+          />
+          <br />
+          <span th:if="${#lists.size(movie.video) > 0}">
+            <a
+              th:href="@{'https://www.youtube.com/watch?v=' + ${movie.video[0].key}}"
+              target="_blank"
+              style="color: white; text-decoration: none"
+            >
+              <button class="btn-trailer">
+                <i class="fab fa-youtube"></i>
+                <p style="color: white">트레일러 보기</p>
+              </button>
+            </a>
+          </span>
+        </aside>
+      </div>
+
+      <!-- movie stat -->
+      <div class="featured-content" style="height: 300px">
+        <div class="action-buttons">
+          <button
+            class="action-btn watched"
+            th:classappend="${watch != null and watch.status == 'Y'} ? 'active' : ''"
+          >
+            <i class="fas fa-eye"></i> <span>봤어요</span>
+            <span
+              class="count"
+              th:text="${watches != null and watches.count != null} ? ${watches.count} :'0'"
+            ></span>
+          </button>
+          <button
+            class="action-btn like"
+            th:classappend="${like != null and like.like == 'Y'} ? 'active' : ''"
+          >
+            <i class="fas fa-thumbs-up"></i> <span>좋아요</span>
+            <span
+              class="count"
+              th:text="${likes != null and likes.likeCount != null} ? ${likes.likeCount} : '0'"
+            >
+              0
+            </span>
+          </button>
+
+          <button
+            class="action-btn dislike"
+            th:classappend="${like != null and like.dislike == 'Y'} ? 'active' : ''"
+          >
+            <i class="fas fa-thumbs-down"></i> <span>싫어요</span>
+            <span
+              class="count"
+              th:text="${likes != null and likes.dislikeCount != null} ? ${likes.dislikeCount} : '0'"
+            >
+              0
+            </span>
+          </button>
+          <button
+            class="action-btn bookmark"
+            th:classappend="${bookmark != null and bookmark.status == 'Y'} ? 'active' : ''"
+          >
+            <i class="fas fa-bookmark"></i> <span>북마크</span>
+            <span
+              class="count"
+              th:text="${bookmarks != null and bookmarks.count != null} ? ${bookmarks.count} : '0'"
+              >0</span
+            >
+          </button>
+        </div>
+
+        <div class="review-container">
+          <div class="review-form">
+            <textarea
+              id="reviewText"
+              class="review-input"
+              placeholder="이 영화에 대한 감상을 작성해주세요..."
+            ></textarea>
+            <button id="submitReview" class="submit-btn">리뷰 등록</button>
+            <button
+              th:disabled="${#lists.size(replies) == 0}"
+              th:classappend="${#lists.size(replies)==0} ? 'disabled' : ''"
+              id="showReview"
+              class="show-btn"
+            >
+              리뷰 보기([[${#lists.size(replies)}]])
+              <span style="color: red; font-weight: bold">스포일러 주의!</span>
+            </button>
+          </div>
+          <!-- 리뷰들이 여기에 추가됩니다 -->
+          <div class="review-show-container">
+            <div class="post-it" th:each="reply : ${replies}">
+              <h3 class="replyNickname" th:text="${reply.nickname}"></h3>
+              <p th:text="${reply.content}"></p>
+              <span
+                class="date"
+                th:text="${#temporals.format(reply.regdate, 'yyyy-MM-dd hh:mm')}"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="featured-content-others">
+        <div class="section-title">
+          <h3>출연/제작</h3>
+        </div>
+        <div class="movie-list">
+          <div class="scroll-container">
+            <!-- 감독을 먼저 표시 -->
+            <div
+              th:each="crewMember : ${movie.crew}"
+              th:if="${crewMember.jobTitle == 'Director'}"
+              class="person-card director"
+            >
+              <div class="card">
+                <img
+                  th:if="${crewMember.profilePath}"
+                  th:src="@{'https://image.tmdb.org/t/p/w200' + ${crewMember.profilePath}}"
+                  th:alt="${crewMember.name + ' Profile'}"
+                />
+                <img
+                  th:unless="${crewMember.profilePath}"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  th:alt="${crewMember.name + ' Profile'}"
+                />
+                <h4 th:text="${crewMember.name}"></h4>
+                <p th:text="${crewMember.jobTitle}"></p>
+              </div>
+            </div>
+
+            <!-- 출연진 표시 -->
+            <div
+              th:each="actor : ${#lists.size(movie.cast) > 9 ? movie.cast.subList(0, 10) : movie.cast}"
+              class="person-card"
+            >
+              <div class="card">
+                <img
+                  th:if="${actor.profilePath}"
+                  th:src="@{'https://image.tmdb.org/t/p/w200' + ${actor.profilePath}}"
+                  th:alt="${actor.name + ' Profile'}"
+                />
+                <img
+                  th:unless="${actor.profilePath}"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  th:alt="${actor.name + ' Profile'}"
+                />
+                <h4 th:text="${actor.name}"></h4>
+                <p th:text="${actor.characterName}"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포토/포스터 이미지 -->
+      <div class="featured-content-others">
+        <div class="cast-crew-tabs">
+          <div class="tab-container">
+            <button id="backdropButton" class="tab-button active">포토</button>
+            <button id="posterButton" class="tab-button">포스터</button>
+          </div>
+        </div>
+        <div id="backdropSection" class="movie-list" style="display: block">
+          <div class="scroll-container">
+            <div
+              th:each="backdrop, iterStat : ${movie.backdrops}"
+              class="image-card"
+            >
+              <div class="card">
+                <img
+                  th:if="${backdrop.filePath}"
+                  th:src="@{'https://image.tmdb.org/t/p/original' + ${backdrop.filePath}}"
+                  th:alt="backdrop"
+                  style="width: 640px; height: 360px; clear: both"
+                />
+              </div>
+            </div>
+            <div
+              th:if="${#lists.size(movie.backdrops) > 10}"
+              class="more-button-container"
+            >
+              <a href="/all-backdrops" class="more-button">더보기</a>
+            </div>
+          </div>
+        </div>
+
+        <div id="posterSection" class="movie-list" style="display: none">
+          <div class="scroll-container">
+            <div
+              th:each="poster, iterStat : ${movie.posters}"
+              class="image-card"
+            >
+              <div class="card">
+                <img
+                  th:if="${poster.filePath}"
+                  th:src="@{'https://image.tmdb.org/t/p/original' + ${poster.filePath}}"
+                  th:alt="'Poster Image'"
+                  style="width: 320px; height: 480px"
+                />
+              </div>
+            </div>
+            <div
+              th:if="${#lists.size(movie.posters) > 10}"
+              class="more-button-container"
+            >
+              <a href="/all-posters" class="more-button">더보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="featured-content-others">
+        <h2 class="section-title">추천 영화</h2>
+        <div class="recommended-movies">
+          <div class="movie-card" th:each="movie : ${recommandList}">
+            <a th:href="@{/board/movieDetail(movieId=${movie.movieId})}">
+              <img
+                class="movie-image"
+                th:src="@{'https://image.tmdb.org/t/p/original' + ${movie.posterPath}}"
+                alt=""
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div th:replace="~{fragments/footer}"></div>
+    </div>
+
+
+  </body>
+</html>

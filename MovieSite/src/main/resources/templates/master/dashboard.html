@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 활동 통계</title>
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/css/movieListStyle.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+	<style>
+		#wrap {width: 1450px; height: 660px; font-size: 17px; text-align: center; margin : auto;}
+	 	
+	 	.outerbox {
+            width: 1453.5px; 
+            height: 645px; 
+            border: 1.8px solid lightgray;
+            text-align: center; 
+        }
+	 	
+	 	.first {
+	 		display: flex;
+	 		align-items: center;
+	 		justify-content: center;
+	    	width: 900px; 
+		 	height: 10px; 
+		 	text-align: center; 
+		 	float: left; 
+		 	background-color: white;
+            padding: 1%; /* 패딩 1% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            margin: auto;
+	 	}
+	 	
+	 	.second {
+	 		display: flex;
+	 		align-items: center;
+	 		justify-content: center;
+	    	width: 550px; 
+		 	height: 10px; 
+		 	text-align: center; 
+		 	float: left; 
+		 	background-color: white;
+            padding: 1%; /* 패딩 1% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            margin: auto;
+	 	}
+	 	
+	 	.side1 {
+	 		display: flex;
+	 		align-items: center; /* 자식 요소 수평 중앙 정렬 */
+		    justify-content: space-between;
+	    	width: 450px; 
+		 	height: 610px; 
+		 	text-align: center; 
+		    flex-direction: column; /* 세로 정렬 */
+		    float: left; 
+		 	margin: auto;
+	    }
+	 	
+	 	.side1-content1 {
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	width: 450px; 
+		 	height: 295px; 
+		 	text-align: center; 
+	    }
+	    
+	    .side1-content2 {
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	width: 450px; 
+		 	height: 270px; 
+		 	text-align: center;
+	    }
+	    
+	    .side1-content3 {
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	width: 450px; 
+		 	height: 450px; 
+		 	text-align: center;
+	    }
+	    
+	    .totalCount {
+	    	position: absolute;
+		    top: 8px;
+		    right: 10px;
+		    z-index: 1;
+		    font-size:43px;
+		    margin-right:8px;
+	    }
+	    
+	    .totalSales {
+	    	position: absolute;
+		    top: 8px;
+		    right: 10px;
+		    z-index: 1;
+		    font-size:33px;
+		    margin-right:8px;
+	    }
+	    
+	    .side2 {
+	 		display: flex;
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	justify-content: space-between;
+	    	width: 450px; 
+		 	height: 610px; 
+		 	text-align: center; 
+		 	flex-direction: column; /* 세로 정렬 */
+		 	float: left; 
+		 	margin: auto;
+	    }
+	    
+	    .side2-content1 {
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	width: 450px; 
+		 	height: 295px; 
+		 	text-align: center; 
+	    }
+	    
+	    .side2-content2 {
+	 		align-items: center; /* 수평 중앙 정렬 */
+	    	width: 450px; 
+		 	height: 315px; 
+		 	text-align: center; 
+	    }
+	    
+	    
+	    .content1 {
+		    display: flex; 
+		    align-items: center; 
+		    justify-content: space-between;
+		    width: 550px;
+		    height: 150px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		.content2 {
+		    display: flex; 
+		    align-items: center; 
+		    justify-content: space-between;
+		    width: 550px;
+		    height: 345px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		 .content3 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 150px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		.content4 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 115px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+
+	 	.content {
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+            font-size: 13px; 
+            background-color: white;
+            padding: 3%; /* 패딩 10% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            position: relative;
+        }
+        
+        .horicontent {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+        }
+        
+        .horicontentforCR {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .horicontentmem {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+   			align-items: center; /* 수직 방향 중앙 정렬 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+        }
+        
+		.left-div, .right-div {
+		    width: 50%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		    justify-content: space-between; /* 양쪽으로 배치 */
+		    align-items: center; /* 수평 중앙 정렬 */
+		}
+		
+		.left70-div {
+		    width: 70%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		}
+		
+		.right30-div {
+		    width: 30%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		    text-align: left;
+		    padding-left: 10px;
+		}
+		
+		.right30-divvv {
+		    width: 30%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		    text-align: center;
+		    font-size: 16px;
+		}
+		
+        #RentStatus {
+		  display: block;
+		  margin: 0 auto;
+		}
+        
+	    .positive {
+            color: tomato; /* 방문자 수 증가 */
+        }
+        .negative {
+            color: rgb(28, 177, 227); /* 방문자 수 감소 */
+        }
+        .nochange {
+        	color: gray;
+        }
+        
+        h2{
+          font-size: 17px;
+        }
+        
+        table {
+		  border-collapse: collapse;
+		  width: 100%;
+		  margin: 1rem auto;
+		  background-color: white;
+		}
+		
+		/* 테이블 행 */
+		th, td {
+		  padding: 1.2px;
+		  text-align: center;
+		  font-size: 13.5px;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		}
+		
+		th {
+		  background-color: #1b1b1b;
+		  color: white;
+		}
+
+		/* 테이블 비율 */
+		th:nth-child(1),
+		td:nth-child(1) {
+		  width: 10%;
+		}
+		
+		th:nth-child(2),
+		td:nth-child(2) {
+		  width: 35%;
+		}
+		
+		th:nth-child(3),
+		td:nth-child(3) {
+		  width: 35%;
+		}
+		
+		th:nth-child(4),
+		td:nth-child(4) {
+		  width: 20%;
+		}
+		
+		#cert th, td {
+		  padding: 0.8px;
+		  text-align: center;
+		  font-size: 13.5px;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		}
+		
+		#cert th:nth-child(1),
+		#cert td:nth-child(1) {
+		  width: 70%;
+		}
+		
+		#cert th:nth-child(2),
+		#cert td:nth-child(2) {
+		  width: 20%;
+		}
+		
+		#cert th:nth-child(3),
+		#cert td:nth-child(3) {
+		  width: 10%;
+		}
+		
+		
+		tr:nth-child(even) {
+		  background-color: #4dbf0010;
+		}
+		
+		.statuscontent {
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+            background-color: white;
+            padding: 3%; /* 패딩 10% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            display: flex; /* 콘텐츠를 flexbox로 설정 */
+		    flex-direction: column; /* 세로 정렬 */
+		    justify-content: center; /* 수직 중앙 정렬 */
+		    align-items: center; /* 수평 중앙 정렬 */
+        }
+		
+		.status-container {
+		    margin: auto;
+		    display: flex; /* 이미지를 왼쪽에, 텍스트를 오른쪽에 배치 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		}
+		
+		.statusicon {
+		    width: 80px; /* 이미지 크기 설정 */
+		    height: 80px; /* 이미지 크기 설정 */
+		    margin-right: 15px; /* 이미지와 텍스트 간 간격 */
+		}
+		
+		.status-text {
+		    font-size: 16px; /* 텍스트 크기 */
+		    line-height: 1.5; /* 텍스트 간격 조정 */
+		}
+		
+		.pending-highlight {
+		    font-size: 25px; /* 텍스트 크기 키우기 */
+		    color: #FF6384; /* 빨간색으로 강조 */
+		    font-weight: bold; /* 텍스트 굵게 */
+		    opacity: 1;
+  			animation: animate 1s infinite;
+		}
+		
+		@keyframes animate {
+		  0% {opacity: 1;}
+		  50% {opacity: 0.5;}
+		  100% {opacity: 1;}
+		}
+			
+		a.pending {
+		  text-decoration : none;
+		  color:  #FF6384;
+		}
+		
+		a.pending:hover{
+			text-decoration : underline;
+		}
+		
+		
+		.progress-bar {
+		    width: 100%;
+		    height: 37px;
+		    background-color: #EFEFEF;
+		    font-weight: 600;
+		    position: relative;
+		}
+		
+		.progress-bar .progress {
+            height: 100%;
+            padding: 0;
+            text-align: center;
+            background-color:#4dbf00;
+            color: white;
+            display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    position: relative;
+        }
+        
+        
+		.progress-text {
+		    position: relative;
+		    right: 5px;
+		    color: white;
+		    transition: all 0.3s ease; /* 애니메이션 추가 */
+		}
+        
+        .canvas-container {
+		    position: relative;
+		    z-index: 10;
+		    width: 100%;
+		    height: 230px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+				
+	</style>
+
+
+</head>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+<div th:replace="~{fragments/nav/masterMenubar}"></div>
+<br><br><br><br>
+
+
+<div id="wrap">
+	<div class="outerbox">
+	<div class="first">WEEKLY DASHBOARD ([[${#temporals.format(sevenDaysAgo, 'MM/dd')}]] - [[${#temporals.format(now, 'MM/dd')}]])</div>
+	<div class="second">OVERALL DASHBOARD </div>
+	
+	<div class="side1">
+		<div class="side1-content1">
+		<div class="content">
+		<h2>최근 일주일 간 매출 현황</h2><br>
+		<div class="totalSales" th:text="${T(com.board.util.SalesFormatter).formatSales(totalSales)}"></div>
+		<div class="canvas-container">
+		  <canvas id="weeklySales"></canvas>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+		  fetch('/master/weeklySales')
+		    .then(response => response.json())
+		    .then(data => {
+		      const labels = data.map(item => {
+		        const date = new Date(item.date);
+		        return (date.getMonth() + 1) + '/' + date.getDate(); // MM/DD 형식으로 변환
+		      });
+		      const rentData = data.map(item => item.sales); //매출 생성
+		
+		      const ctxweeklySales = document.getElementById('weeklySales');
+		      new Chart(ctxweeklySales, {
+		        type: 'bar',
+		        data: {
+		          labels: labels,
+		          datasets: [{
+		            label: '매출',
+		            data: rentData,
+		            borderWidth: 1,
+		            borderColor: '#FF6384',
+		            backgroundColor: '#FF6384'
+		          }]
+		        },
+		        options: {
+		          scales: {
+		            y: {
+		              beginAtZero: true,
+		              ticks: {
+		                stepSize: 20000
+		              }
+		            }
+		          }
+		        }
+		      });
+		    })
+		    .catch(error => console.error('Error fetching data:', error));
+		</script>
+
+		</div>
+		</div>
+	
+		<div class="side1-content2">
+			<div class="content">
+				<div class="horicontentmem">
+					<div class="left-div">
+						<h2>최근 일주일 신규 회원 수</h2><br>
+						<p><span th:text="${signup7days}" style="font-size:43px;"></span>
+					</div>
+					<div class="right-div">
+						<h2>최근 일주일 방문자 수</h2><br>
+						<p><span th:text="${visit7days}" style="font-size:43px;"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="side1-content3">
+			<div class="content">
+				<h2>최근 일주일 결제 유형 통계</h2><br>
+				<div class="horicontent">
+				<div class="left70-div">
+					<div style="width: 85%; align-items: center;">
+					    <canvas id="paymentTypeChart"></canvas>
+					</div>
+					<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+					<script>
+					    const paymentTypeChartctx = document.getElementById('paymentTypeChart');
+					    let paymentTypeChart;
+					
+					    fetch('/master/weeklyPaymentType')
+					        .then(response => response.json())
+					        .then(data => {
+					            if (paymentTypeChart) {
+					                paymentTypeChart.destroy();
+					            }
+					            paymentTypeChart = new Chart(paymentTypeChartctx, {
+					                type: 'bar',
+					                data: {
+					                    labels: ['현금 결제', '포인트 결제'],
+					                    datasets: [{
+					                        data: [data.cashSales, data.pointSales],
+					                        barThickness: 20, // 바의 두께를 설정 (픽셀 단위),
+					                    }]
+					                },
+					                options: {
+					                	indexAxis: 'y',
+					                    responsive: true,
+					                    elements: {
+					                        bar: {
+					                          borderwidth: 0.2,
+					                        }
+					                    },
+					                    plugins: {
+					                        legend: {
+					                          display: false,
+					                          position: 'right',
+					                        },
+					                        title: {
+					                          display: false
+					                        }
+					                    },
+					                    scales: {
+					    		            x: {
+					    		              beginAtZero: true,
+					    		              ticks: {
+					    		                stepSize: 150000
+					    		              },
+					    		              categoryPercentage: 0.5 // 이 값을 조정해 보세
+					    		            }
+					    		          }
+					                }
+					            });
+					        })
+					        .catch(error => console.error('Error fetching data:', error));
+					</script>
+					</div>
+					<div class="right30-divvv">
+						<br><h4>[비율]</h4><br>
+						현금 : 포인트 <br>
+						<span id="cashRatio"></span>% : <span id="pointRatio"></span>%
+						<script>
+						    fetch('/master/weeklyPaymentType')
+						        .then(response => response.json())
+						        .then(data => {
+						            document.getElementById('cashRatio').textContent = data.cashSalesRatio.toFixed(1);
+						            document.getElementById('pointRatio').textContent = data.pointSalesRatio.toFixed(1);
+						        })
+						        .catch(error => console.error('데이터 가져오기 오류:', error));
+						</script>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="side2">
+		<div class="side2-content1">
+			<div class="content">
+			<h2>최근 일주일 간 대여 현황</h2><br>
+				<div class="totalCount" th:text="${totalRentCount}"></div>
+				<div class="canvas-container">
+				  <canvas id="weeklyRent"></canvas>
+				</div>
+				<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+				<script>
+					  fetch('/master/weeklyRent')
+					    .then(response => response.json())
+					    .then(data => {
+					      const labels = data.map(item => {
+					        const date = new Date(item.date);
+					        return (date.getMonth() + 1) + '/' + date.getDate(); // MM/DD 형식으로 변환
+					      });
+					      const rentData = data.map(item => item.count); //대여수 생성
+					
+					      const ctxxxxx = document.getElementById('weeklyRent');
+					      new Chart(ctxxxxx, {
+					        type: 'bar',
+					        data: {
+					          labels: labels,
+					          datasets: [{
+					            label: '대여 수',
+					            data: rentData,
+					            borderWidth: 1,
+					            borderColor: '#4dbf00',
+					            backgroundColor: '#4dbf00'
+					          }]
+					        },
+					        options: {
+					          scales: {
+					            y: {
+					              beginAtZero: true,
+					              ticks: {
+					                stepSize: 1
+					              }
+					            }
+					          }
+					        }
+					      });
+					    })
+					    .catch(error => console.error('Error fetching data:', error));
+					</script>
+			</div>
+		</div>
+		
+		<div class="side2-content2">
+			<div class="content">
+				<h2>최근 일주일 간 개봉 기간 별 대여 비율</h2><br>
+				<div style="display: flex; justify-content: center;">
+					<canvas id="RentByRDLast7Days" width = "245"></canvas>
+				</div>
+				<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+				<script>
+				  fetch('/master/RentByReleaseDateLast7days')
+				  	.then(response => response.json())
+				  	.then(data => {
+				  		// 데이터가 리스트 형태로 오므로, 첫 번째 요소만 사용
+			            const chartData = data[0];
+			            
+			            const ctxRD = document.getElementById('RentByRDLast7Days').getContext('2d');
+			            new Chart(ctxRD, {
+			                type: 'pie',
+			                data: {
+			                    labels: ['1개월 이내', '1-3개월', '3-6개월', '6개월-1년', '1년 이상'],
+			                    datasets: [{
+			                        data: [
+			                            chartData.count_10000,
+			                            chartData.count_6000,
+			                            chartData.count_5000,
+			                            chartData.count_4000,
+			                            chartData.count_1000
+			                        ]
+			                    }]
+			                },
+			                options: {
+			                    responsive: false,
+			                    plugins: {
+			                        legend: {
+			                            position: 'top',
+			                            labels: {
+					                        boxWidth: 10  // 레전드의 색상 박스 너비
+					                        //padding: 15,   // 레전드 항목 간의 간격
+					                    }
+			                        }
+			                    }
+			                }
+			            });
+			         })
+				</script>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="content2">
+		<div class="content">
+			<h2><span th:text="${currentYear}"></span> 대여/매출 현황</h2><br>
+			<div class="horicontent">
+				<div class="left-div">
+		        	<br>[대여 중 / 대여종료 비율]<br><br>
+					<div style=" align-items: center; ">
+					  <canvas id="RentStatus" width="205"></canvas>
+					</div>
+					<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+					<script>
+					  fetch('/master/rentStatus')
+					  	.then(response => response.json())
+					  	.then(data => {
+					  	  const labels = data.map(item => {
+					  		  if(item.status === 'N') {
+					  			  return "대여 종료";
+					  		  } else if (item.status === 'Y'){
+					  			  return "대여 중";
+					  		  }
+					  	  });
+					  	  const counts = data.map(item => item.count);
+					  		
+					  	  // 상태에 따라 색상 설정
+					      const backgroundColors = data.map(item => {
+					        return item.status === 'N' ? '#d2d2d2' : '#4dbf00';
+					      });
+					  	  
+					  	  const ctxz = document.getElementById('RentStatus');
+			
+						  new Chart(ctxz, {
+						    type: 'doughnut',
+						    data: {
+						      labels: labels,
+						      datasets: [{
+						        label: '대여 건수',
+						        data: counts,
+						        backgroundColor: backgroundColors,
+						        hoverOffset: 4,
+								borderRadius : 5,
+								spacing : 3
+						      }]
+						    },
+						    options: {
+						    	responsive: false,
+						    	cutout: 40,
+						    	plugins: {
+			                        legend: {
+			                            display: true, // 범례는 표시
+			                            labels: {
+			                            	color: '#000', // 범례 글자 색상 설정
+			                            	boxWidth: 13,  // 범례 색상 박스 너비
+			                            	padding: 15
+			                            }, 
+			                        }
+						    	}
+						    },
+			                plugins: [legendMargin]
+						  });
+					  
+					  	})
+					</script>
+				</div>
+				
+	        	<div class="right-div">
+	        		<br>[매출 Top 10 회원]<br>
+					<div>
+					  <table class="table table-sm">
+						  <thead class="table-light">
+						    <tr>
+						      <th scope="col">순위</th>
+						      <th scope="col">닉네임</th>
+						      <th scope="col">매출</th>
+						      <th scope="col">대여 수</th>
+						    </tr>
+						  </thead>
+						  <tbody id = "topRentersBody"></tbody>
+						</table>
+					  	
+					  	<script>
+					  		fetch('/master/topRenters')
+					  			.then(response => response.json())
+					  			.then(data => {
+					  				const tbody = document.getElementById('topRentersBody');
+					  				if (data.length === 0){
+					  					tbody.innerHTML = '<tr><td colspan="3">올해 대여한 회원이 없습니다.</td></tr>';
+					  				} else {
+					  					data.forEach((item, index) => {
+					  						if(index < 10){
+						  						const row = document.createElement('tr');
+						  						row.innerHTML = `
+						  							<td>${index + 1}</td>
+						  							<td>${item.nickname}</td>
+						  							<td>${item.sales}</td>
+						  							<td>${item.rentCount}</td>
+						  						`;
+						  						tbody.appendChild(row);
+					  						}
+					  					});
+					  				}
+					  			}).catch(error => console.error('Error => ', error));
+					  	</script>
+					  
+					</div>
+	        	</div>	
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	<div class="content4">
+		<div class="content">
+			<h2>전체 구매 전환률</h2><br> 
+			<div class="horicontentforCR">
+				<!-- 구매 전환률 (Conversion Rate) = 영화 전체 대여 수 / 영화 상세페이지를 클릭한 전체 횟수(hitno) * 100% -->
+				<div class="left70-div">
+					<div class="progress-bar">           
+						<div class="progress" id="progress" th:style="'width:' + ${conversionRate} + '%;'">
+        					<span class="progress-text" th:text="${conversionRate} + '%'"></span>
+						</div>
+					</div>
+				</div>
+				<div class="right30-div" id="conversionRate">
+					<p>· 전체 대여 수 = <span th:text="${RentCount}"></span></p>
+					<p>· 상세페이지 클릭 수 = <span th:text="${HitnoCount}"></span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<!-- 
+	<div class="content4">
+		<div class="statuscontent">
+			<h2>회원 등급 현황</h2><br> 나중에 분기별로 보여줘야 함.
+			<div class="status-container">
+				<img class="statusicon" src="/images/img/membership.png" alt="">&nbsp;&nbsp;&nbsp;
+				<div class="status-text">
+					<p>Silver : 6 명</p>
+					<p>Gold : 9 명</p>
+					<p>Platinum : 104 명</p>
+					<p>Diamond : 54 명</p>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	 -->
+	
+	
+	
+	<div class="content1">
+		<div class="statuscontent">
+			<h2>회원 요청 사항 현황</h2>
+			<div class="status-container">
+				<img class="statusicon" src="/images/img/RequestStatus.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<div class="status-text">
+					<span class="pending-highlight">· <a href="/master/memberRequest" class="pending">처리 필요 : <span id="pendingCount" ></span> 건</a></span>
+					<br>
+					<span style="color: gray;">· 처리 완료 : <span id="completedCount"></span> 건</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	
+
+
+
+</div>
+
+<script>
+
+
+
+	//회원 구매 전환율 % 텍스트가 progress 색상이 너무 작아지면 (15% 미만이면) 텍스트는 오른쪽으로 나오게끔 하는 스크립트.
+	function adjustProgressText() {
+	    const progress = document.getElementById('progress');
+	    const progressText = progress.querySelector('.progress-text');
+	    if (!progress || !progressText) return;
+	
+	    // CSS에서 실제 너비 가져오기
+	    const progressWidth = parseFloat(getComputedStyle(progress).width);
+	    const progressBarWidth = parseFloat(getComputedStyle(progress.parentElement).width);
+	
+	    const progressPercentage = (progressWidth / progressBarWidth) * 100;
+	
+	    if (progressPercentage < 15) {
+	        progressText.style.color = '#000';
+	        progressText.style.position = 'absolute';
+	        progressText.style.left = 'calc(100% + 10px)';
+	        progressText.style.top = '50%';
+	        progressText.style.transform = 'translateY(-50%)';
+	    } else {
+	        progressText.style.color = '#fff';
+	        progressText.style.position = 'relative';
+	        progressText.style.left = '0';
+	        progressText.style.transform = 'none';
+	    }
+	}
+	
+	document.addEventListener('DOMContentLoaded', () => {
+	    adjustProgressText();
+	    window.addEventListener('resize', adjustProgressText);
+	});
+	
+
+
+	//회원 구매 전환율 % 구하기
+	const updateProgressBar = async() => {
+	    await fetch('/master/conversionRate', { 
+	        method: 'GET',
+	        headers: { "content-type": "application/json" }
+	    })
+	    .then((response) => response.json())
+	    .then((data) => {
+	        // conversionRate 값을 사용하여 progress 바 업데이트
+	        const conversionRate = data.conversionRate; // 서버에서 받은 데이터 구조에 맞게 수정
+	        const progressElement = document.getElementById('progress');
+	       
+	        // width와 텍스트 업데이트
+            progressElement.style.width = conversionRate + '%';
+            progressElement.querySelector('.progress-text').textContent = conversionRate + '%';
+
+            // adjustProgressText 호출 시점 수정
+            adjustProgressText();
+	    })
+	    .catch((error) => {
+	        console.error('============= Error :', error);
+	    });
+	}
+	updateProgressBar(); // 페이지 로드 시 프로그레스 바 업데이트
+
+	
+	
+	//회원 가입 수 증감 색상 표시
+	const signupResult = async() => {
+		await fetch('/master/signupResult', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+			  const yesterdaySignup = data.yesterdaySignup;
+			  const todaySignup = data.todaySignup;
+			  const totalMember = data.totalMember;
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('todaySignupCount').textContent = todaySignup;
+		      document.getElementById('totalMemberCount').textContent = totalMember;
+			  
+			  const differenceSignup = data.todaySignup - data.yesterdaySignup;
+			  const resultDivSignup = document.getElementById('resultSignup');
+				
+				if (differenceSignup > 0) {
+				    resultDivSignup.innerHTML = `<span class="positive">▲+${differenceSignup}</span>`;
+				} else if (differenceSignup < 0) {
+				    resultDivSignup.innerHTML = `<span class="negative">▼${differenceSignup}</span>`;
+				} else {
+				    resultDivSignup.innerHTML = `<span class="nochange">···</span>`;
+				}
+	  
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	signupResult();
+	
+	
+	//방문자 수 증감 색상 표시
+	const visitResult = async() => {
+		await fetch('/master/visitResult', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+			  const yesterdayVisitors = data.yesterdayVisitors;
+			  const todayVisitors = data.todayVisitors;
+			  const totalVisitors = data.totalVisitors;
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('todayVisitorsCount').textContent = todayVisitors;
+		      document.getElementById('totalVisitorsCount').textContent = totalVisitors;
+			  
+		      const differenceVisitors = todayVisitors - yesterdayVisitors;
+			  const resultDivSignup = document.getElementById('resultVisit');
+				
+			  if (differenceVisitors > 0) {
+				    resultDivSignup.innerHTML = `<span class="positive">▲+${differenceVisitors}</span>`;
+				} else if (differenceVisitors < 0) {
+				    resultDivSignup.innerHTML = `<span class="negative">▼${differenceVisitors}</span>`;
+				} else {
+				    resultDivSignup.innerHTML = `<span class="nochange">···</span>`;
+				}
+
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	visitResult();
+	
+	//회원 요청 사항 처리 상태 현황 표시
+	const requestStatus = async() => {
+		await fetch('/master/requestStatus', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+
+			  let pendingCount = 0;
+			  let completedCount = 0;
+			  
+			  
+			  // 객체에서 status와 count를 가져와서 처리
+	          Object.entries(data).forEach(([status, count]) => {
+	            if (status === 'PENDING') {
+	                pendingCount = count;  // PENDING 상태의 수 설정
+	            } else if (status === 'COMPLETED') {
+	                completedCount = count;  // COMPLETED 상태의 수 설정
+	            }
+	          });
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('pendingCount').textContent = pendingCount;
+		      document.getElementById('completedCount').textContent = completedCount;
+
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	requestStatus();
+	
+	//Chart.js 에서 legend 와 chart 사이의 마진
+	const legendMargin = {
+   	    id: 'legendMargin',
+   	    beforeInit(chart) {
+   	        const originalFit = chart.legend.fit;
+   	        chart.legend.fit = function fit() {
+   	            originalFit.bind(chart.legend)();
+   	            this.height += 15; // Adjust this value to increase/decrease space
+   	        };
+   	    }
+   	};
+	
+	const legendMarginhori = {
+	   	    id: 'legendMarginhori',
+	   	    beforeInit(chart) {
+	   	        const originalFit = chart.legend.fit;
+	   	        chart.legend.fit = function fit() {
+	   	            originalFit.bind(chart.legend)();
+	   	            this.width += 35; // Adjust this value to increase/decrease space
+	   	        };
+	   	    }
+	   	};
+	
+</script>
+
+</body>
+</html>

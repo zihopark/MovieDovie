@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 통계</title>
+    <style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/movieListStyle.css">
+<style>
+ #wrap {width: 1450px; height: 720px; font-size: 15px; text-align: center; margin: auto;}
+
+        .content1 {
+		    display: flex;
+		    justify-content: center; /* 수평 중앙 정렬 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 305px;
+		    height: 720px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		}
+
+        .content2 {
+		    display: flex;
+		    justify-content: center; /* 수평 중앙 정렬 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 520px;
+		    height: 720px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		}
+		
+		 .content3 {
+		    display: flex;
+		    justify-content: center; /* 수평 중앙 정렬 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 625px;
+		    height: 720px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		}
+		
+		.content {
+            width: 97%; /* 부모 너비에 맞춤 */
+            height: 90%; /*부모 너비에 맞춤*/
+            text-align: center;
+            align-items : center;
+            background-color: white;
+            padding: 1%; /* 패딩 10% */
+            border: 2px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+        }
+        
+        table {
+		  border-collapse: collapse;
+		  width: 98%;
+		  margin: 1rem auto;
+		  background-color: white;
+		}
+		
+		/* 테이블 행 */
+		th, td {
+		  padding: 1.25px;
+		  text-align: center;
+		  font-size: 13px;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		}
+		
+		th {
+		  background-color: #1b1b1b;
+		  color: white;
+		}
+
+		/* 테이블 비율 */
+		th:nth-child(1),
+		td:nth-child(1) {
+		  width: 10%;
+		}
+		
+		th:nth-child(2),
+		td:nth-child(2) { 
+		  width: 40%;
+		}
+		
+		th:nth-child(3),
+		td:nth-child(3) {
+		  width: 20%;
+		}
+		
+		th:nth-child(4),
+		td:nth-child(4) {
+		  width: 15%;
+		}
+		
+		th:nth-child(5),
+		td:nth-child(5) {
+		  width: 15%;
+		}
+		
+		tr:nth-child(even) {
+		  background-color: #4dbf0010;
+		}
+		
+		/* 호불호 갈리는 영화 테이블 */
+		#topDivisiveMovieTable th, #topDivisiveMovieTable td {
+		  padding: 1.2px;
+		  text-align: center;
+		  font-size: 13px;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		  height: 40px;
+		}
+
+		/* 특정 열만 너비 설정 */
+		#topDivisiveMovieTable th:nth-child(1),
+		#topDivisiveMovieTable td:nth-child(1) {
+		    width: 10%; /* 순위 열 너비 */
+		}
+		
+		#topDivisiveMovieTable th:nth-child(2),
+		#topDivisiveMovieTable td:nth-child(2) {
+		    width: 35%; /* 영화코드 열 너비 */
+		}
+		
+		#topDivisiveMovieTable th:nth-child(3),
+		#topDivisiveMovieTable td:nth-child(3) {
+		    width: 35%; /* 비율 열 너비 */
+		}
+		
+		#topDivisiveMovieTable th:nth-child(4),
+		#topDivisiveMovieTable td:nth-child(4) {
+		    width: 10%; /* 전체 갯수 열 너비 */
+		}
+		
+		/* 행에 대해 배경색 변경 */
+		#topDivisiveMovieTable tr:nth-child(even) {
+		    background-color: #f2f2f2;
+		}
+				
+		
+		#progress {
+			width: 100%; /* progress 바가 부모 영역에 맞게 꽉 차게 설정 */
+		    margin: 0; /* 여백 제거 */
+		    padding: 4px; /* 내부 여백 제거 */
+		    border: none; /* 기본 border 제거 */
+	        appearance: none;
+	    }
+	      
+	    #progress::-webkit-progress-bar {   /* 싫어요 -> (바탕색) */
+	        background: tomato;
+	        border-radius: 11px;
+	        border: 1px solid white;
+	        height: 15px;
+	        width: 100%;
+	        overflow: hidden;
+	    }
+	
+	    #progress::-webkit-progress-value { 	/* 좋아요 표시 */
+	        background: #6BBAFF;
+	        border-radius: 0px;
+	        height: 15px;
+	        width: 100%;
+	    }
+
+	
+
+</style>
+
+</head>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+<div th:replace="~{fragments/nav/masterMenubar}"></div>
+<br><br>
+<div id="wrap">
+	<div class="content1">
+		<div class="content">
+			<br><b>회원들의 Top 7 인기 장르</b><br><br>
+			<div style="display: flex; justify-content: center;">
+			  <canvas id="topFavGenre" width = "230"></canvas>
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script>
+			  fetch('/master/topFavGenre')
+			  	.then(response => response.json())
+			  	.then(data => {
+			  	  const labels = data.map(item => item.genre);
+			  	  const counts = data.map(item => item.count);
+			  
+			  	  // 상위 7개 항목만 추출
+			      const top7Labels = labels.slice(0, 7);  // 상위 7개의 장르
+			      const top7Counts = counts.slice(0, 7);  // 상위 7개의 카운트
+			      
+			  	  
+			  	  const favGenre = document.getElementById('topFavGenre');
+	
+				  new Chart(favGenre, {
+				    type: 'pie',
+				    data: {
+				      labels: top7Labels,
+				      datasets: [{
+				        label: '장르',
+				        data: top7Counts,
+				        hoverOffset: 4,
+				      }]
+				    },
+				    options: {
+		                responsive: false,
+		                  plugins: {
+		                    legend: {
+		                      position: 'top',  // 레전드 위치 (top, left, right, bottom)
+		                      labels: {
+		                        boxWidth: 10  // 레전드의 색상 박스 너비
+		                        //padding: 15,   // 레전드 항목 간의 간격
+		                      }
+		                    }
+		                  }
+				    },
+				    plugins: [legendMargin]
+			  	  })
+			  	});
+			</script>
+			<br>
+			<hr style="border-width:1.5px 0 0 0; border-style:dashed; border-color:#4dbf00;">
+			
+			<br><b>남녀별 Top 7 인기 장르</b><br><br>
+			<div style="width: 100%; max-height: 500px;display: flex; justify-content: center;">
+		    <canvas id="GenderFavGenre"></canvas>
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script>
+			    Promise.all([
+			        fetch('/master/topFavGenreForMale').then(response => response.json()),
+			        fetch('/master/topFavGenreForFemale').then(response => response.json())
+			    ])
+			    .then(([maleData, femaleData]) => {
+			        // 데이터 처리 로직 유지
+			        femaleData.sort((a, b) => b.count - a.count);
+			        maleData.sort((a, b) => b.count - a.count);
+			
+			        const top7FemaleData = femaleData.slice(0, 7);
+			        const top7MaleData = maleData.slice(0, 7);
+			
+			        const femalelabels = top7FemaleData.map(item => item.genre);
+			        const femalecounts = top7FemaleData.map(item => item.count);
+			        const malelabels = top7MaleData.map(item => item.genre);
+			        const malecounts = top7MaleData.map(item => item.count);
+			
+			        const genreLabels = [...new Set([...femalelabels, ...malelabels])];
+			        const maleCountsForLabels = genreLabels.map(label => malelabels.includes(label) ? malecounts[malelabels.indexOf(label)] : 0);
+			        const femaleCountsForLabels = genreLabels.map(label => femalelabels.includes(label) ? femalecounts[femalelabels.indexOf(label)] : 0);
+			
+			        const canvas = document.getElementById('GenderFavGenre');
+			        canvas.width = 265; // 캔버스 너비 (픽셀 단위)
+			        canvas.height = 260; // 캔버스 높이 (픽셀 단위)
+			
+			        new Chart(canvas.getContext('2d'), {
+			            type: 'bar',
+			            data: {
+			                labels: genreLabels,
+			                datasets: [
+			                    {
+			                        label: '남성 선호 장르',
+			                        data: maleCountsForLabels,
+			                        borderWidth: 1,
+			                        borderColor: '#36A2EB',
+			                        backgroundColor: '#36A2EB90'
+			                    },
+			                    {
+			                        label: '여성 선호 장르',
+			                        data: femaleCountsForLabels,
+			                        borderWidth: 1,
+			                        borderColor: '#FF6384',
+			                        backgroundColor: '#FF638490'
+			                    }
+			                ]
+			            },
+			            options: {
+			                responsive: false, // 반응형 비활성화
+			                maintainAspectRatio: false, // 비율 고정 해제
+			                scales: {
+			                    y: {
+			                        beginAtZero: true,
+			                        ticks: {
+			                            stepSize: 1, // Y축 눈금 단위를 1로 설정
+			                        }
+			                    }
+			                }
+			            }
+			        });
+			    })
+			    .catch(error => console.error('Error fetching data:', error));
+			</script>
+		</div>
+		
+	
+	</div>
+	
+	<div class="content2">
+		<div class="content">
+
+			<br><b>좋아요 % 높은 영화 순위</b>
+			<table class="table table-sm">
+			  <thead class="table-light">
+			    <tr>
+			      <th scope="col">순위</th>
+			      <th scope="col">영화 제목</th>
+			      <th scope="col">좋아요 %</th>
+			      <th scope="col">전체 갯수</th>
+			      <th scope="col">좋아요 갯수</th>
+			    </tr>
+			  </thead>
+			  <tbody id = "topLikeBody"></tbody>
+			</table>
+			<script>
+		  		fetch('/master/topLikeMovie')
+		  			.then(response => response.json())
+		  			.then(data => {
+		  				const tbody = document.getElementById('topLikeBody');
+		  				if (data.length === 0){
+		  					tbody.innerHTML = '<tr><td colspan="5"><br>좋아요/싫어요를 등록한 회원이 없거나,<br>좋아요 수 10개 이상이 되는 영화가 없습니다.<br><br></td></tr>';
+		  				} else {
+		  					data.forEach((item, index) => {
+		  						if(index < 10){ //10개까지만 보여줌
+			  						const row = document.createElement('tr');
+			  						row.innerHTML = `
+			  							<td>${index + 1}</td>
+			  							<td><a href="/board/movieDetail?movieId=${item.movieseqno}">${item.title}</a></td>
+			  							<td>${item.likePercentage}%</td>
+			  							<td>${item.totalCount}</td>
+			  							<td>${item.likeCount}</td>
+			  						`;
+			  						tbody.appendChild(row);
+		  						}
+		  					});
+		  				}
+		  			}).catch(error => console.error('Error => ', error));
+		  	</script>
+			<br>
+			<hr style="border-width:1.5px 0 0 0; border-style:dashed; border-color:#4dbf00;">
+			
+
+			<br><br><b>싫어요 % 높은 영화 순위</b>
+			<table class="table table-sm">
+			  <thead class="table-light">
+			    <tr>
+			      <th scope="col">순위</th>
+			      <th scope="col">영화 제목</th>
+			      <th scope="col">싫어요 %</th>
+			      <th scope="col">전체 갯수</th>
+			      <th scope="col">싫어요 갯수</th>
+			    </tr>
+			  </thead>
+			  <tbody id = "topDislikeBody"></tbody>
+			</table>
+			<script>
+		  		fetch('/master/topDislikeMovie')
+		  			.then(response => response.json())
+		  			.then(data => {
+		  				const tbody = document.getElementById('topDislikeBody');
+		  				if (data.length === 0){
+		  					tbody.innerHTML = '<tr><td colspan="5"><br>좋아요/싫어요를 등록한 회원이 없거나,<br>싫어요 수 10개 이상이 되는 영화가 없습니다.<br><br></td></tr>';
+		  				} else {
+		  					data.forEach((item, index) => {
+		  						if(index < 10){ //10개까지만 보여줌
+			  						const row = document.createElement('tr');
+			  						row.innerHTML = `
+			  							<td>${index + 1}</td>
+			  							<td><a href="/board/movieDetail?movieId=${item.movieseqno}">${item.title}</a></td> 
+			  							<td>${item.dislikePercentage}%</td>
+			  							<td>${item.totalCount}</td>
+			  							<td>${item.dislikeCount}</td>
+			  						`;
+			  						tbody.appendChild(row);
+		  						}
+		  					});
+		  				}
+		  			}).catch(error => console.error('Error => ', error));
+		  	</script>
+		</div>
+	
+	
+	</div>
+	<div class="content3">
+		<div class="content">
+
+			<br><b>호불호 갈리는 영화 순위</b><br>
+			<table class="table table-sm" id="topDivisiveMovieTable">
+			  <thead class="table-light">
+			    <tr>
+			      <th scope="col">순위</th>
+			      <th scope="col">영화 제목</th>
+			      <th scope="col">좋아요 : 싫어요</th>
+			      <th scope="col">전체 갯수</th>
+			    </tr>
+			  </thead>
+			  <tbody id = "topDivisiveBody"></tbody>
+			</table>
+			<script>
+		  		fetch('/master/topDivisiveMovie')
+		  			.then(response => response.json())
+		  			.then(data => {
+		  				const tbody = document.getElementById('topDivisiveBody');
+		  				if (data.length === 0){
+		  					tbody.innerHTML = '<tr><td colspan="4"><br>좋아요/싫어요를 등록한 회원이 없거나,<br>좋아요/싫어요 수 20개 이상이 되는 영화가 없습니다.<br><br></td></tr>';
+		  				} else {
+		  					data.forEach((item, index) => {
+		  						if(index < 12){ //12개까지만 보여줌
+			  						const row = document.createElement('tr');
+			  						
+			  						// dislikePercentage 값을 기준으로 tr 색상 결정
+			  			            const rowColor = item.dislikePercentage > 50 ? '#FFD8D8' : '#C3DFFF';
+			  						
+			  						row.innerHTML = `
+			  							<td>${index + 1}</td>
+			  							<td><a href="/board/movieDetail?movieId=${item.movieseqno}">${item.title}</a></td> 
+			  							<td>
+				  							<progress class="progress" id="progress" value="${item.likePercentage}" min="0" max="100"></progress>
+				  						  	<br>
+				  							<span id="progress-text">${item.ratio}</span>
+			  							</td>
+			  							<td>${item.totalCount}</td>
+			  						`;
+			  						
+			  						// 행 색상 변경
+	          						row.style.backgroundColor = rowColor; // 행 전체의 배경색을 변경
+	
+			  						tbody.appendChild(row);
+		  						}
+		  					});
+		  				}
+		  			}).catch(error => console.error('Error => ', error));
+		  	</script>
+		</div>
+	
+	</div>
+</div>
+
+<script>
+
+//chart.js 레전드와 차트 사이 마진 주는 함수
+const legendMargin = {
+	    id: 'legendMargin',
+	    beforeInit(chart) {
+	        const originalFit = chart.legend.fit;
+	        chart.legend.fit = function fit() {
+	            originalFit.bind(chart.legend)();
+	            this.height += 10; // Adjust this value to increase/decrease space
+	        };
+	    }
+	};
+</script>
+
+</body>
+</html>

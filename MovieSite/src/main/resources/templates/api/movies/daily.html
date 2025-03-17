@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daily Box Office</title>
+</head>
+<body>
+    <h2>Daily Box Office Report</h2>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Movie Name</th>
+                <th>Sales Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="movie : ${movies}">
+                <td th:text="${movie.rank}"></td>
+                <td th:text="${movie.movieNm}"></td>
+                <td th:text="${movie.salesAmt}"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+</body>
+</html>

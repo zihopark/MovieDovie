@@ -1,0 +1,649 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  /* font-family: "Jua", sans-serif; */
+  font-weight: 400;
+  font-style: normal;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #000;
+}
+
+.container {
+  background-color: #151515;
+  min-height: calc(100vh - 50px);
+  color: white;
+}
+
+.content-container {
+  margin-left: 50px;
+}
+
+.featured-content {
+  height: 1000px;
+  aspect-ratio: auto;
+  padding-left: 50px;
+  min-height: fit-content;
+}
+
+.featured-content-others {
+  padding: 0 50px 50px 50px;
+}
+
+.featured-title {
+  width: 200px;
+}
+
+.featured-desc {
+  margin: 100px 50px;
+  width: 500px;
+  color: lightgray;
+}
+
+.featured-button {
+  background-color: #4dbf00;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-weight: bold;
+}
+
+.image-container {
+  display: flex; /* Flexbox 활성화 */
+  flex-wrap: wrap; /* 줄 바꿈 허용 */
+  justify-content: center; /* 중앙 정렬 */
+  gap: 10px; /* 이미지 간격 */
+}
+
+.image-container img {
+  max-width: 100%; /* 이미지의 최대 너비를 100%로 설정 */
+  height: auto; /* 비율 유지 */
+  border-radius: 8px; /* 이미지 모서리 둥글게 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  flex: 1 1 30%; /* 기본 너비 30% */
+}
+
+.navbar {
+  width: 100%;
+  padding-left: 50px;
+  height: 50px;
+  background-color: black;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  padding: 0 80px 0 0;
+  height: 100%;
+  color: white;
+  font-family: "Jua", sans-serif;
+  z-index: 1200;
+}
+
+.navbar-container a {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+}
+
+.logo-container {
+  flex: 1;
+}
+
+.logo {
+  font-size: 30px;
+  color: #4dbf00;
+}
+
+.menu-container {
+  flex: 6;
+}
+
+.menu-list {
+  margin-left: 30px;
+  display: flex;
+  list-style: none;
+}
+
+.menu-list-item {
+  margin-right: 30px;
+}
+
+.menu-list-item.active {
+  font-weight: bold;
+}
+
+.profile-container {
+  flex: 7;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.mypoint-container {
+  margin-left: 14px;
+  display: flex;
+  flex-direction: row;
+}
+
+.mypoint-container p {
+  cursor: pointer;
+  margin-left: 3px;
+  text-align: center;
+}
+
+.profile-text-container {
+  margin: 0 20px;
+}
+
+.profile-picture {
+  width: 32px;
+  height: 32px;
+  margin-top: 6.5px;
+  margin-bottom: 6.5px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bell-box {
+  position: relative;
+  height: 20px;
+  background: #3c3d37;
+  border: 10px;
+  border-radius: 20px;
+  width: 80px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.dropdown-label {
+  font-size: 12px;
+  margin: 10px;
+  font-weight: bold;
+  color: rgb(50, 50, 50);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn_icon {
+  font-family: "Material Icons";
+}
+
+.dropbtn {
+  border: 1px solid rgb(37, 37, 37);
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  font-weight: 400;
+  color: rgb(37, 37, 37);
+  padding: 10px;
+  width: 120px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 4.5px 0;
+}
+
+/* 공통 드롭다운 스타일 */
+.dropdown-content,
+.dropdown-content-noti {
+  display: none;
+  font-weight: 400;
+  background-color: #fcfcfc;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  overflow: scroll;
+  z-index: 1500;
+}
+
+/* 공통 스크롤바 스타일 */
+.dropdown-content::-webkit-scrollbar,
+.dropdown-content-noti::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb,
+.dropdown-content-noti::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: rgb(194, 194, 194);
+}
+
+/* 개별 드롭다운 크기 설정 */
+.dropdown-content {
+  width: 240px;
+  min-width: 240px;
+  height: 160px;
+  z-index: 1500;
+}
+
+.dropdown-content-noti {
+  min-width: 230px;
+  height: 200px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  display: block;
+  text-decoration: none;
+  color: rgb(37, 37, 37);
+  font-size: 12px;
+  padding: 12px 20px;
+}
+
+.dropdown-content a:hover {
+  background-color: #ececec;
+  color: #4dbf00;
+}
+
+#notification-count {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 18px;
+  color: white;
+}
+
+.dropdown-content .dropdown-item:hover {
+  color: red; /* 마우스를 올리면 빨간색으로 변경 */
+}
+
+@media only screen and (max-width: 940px) {
+  .menu-container {
+    display: none;
+  }
+}
+.navbar-container.active {
+  background-color: white;
+  color: black;
+}
+
+.left-menu-icon.active {
+  color: black;
+}
+
+.toggle.active {
+  background-color: black;
+}
+.search-box {
+  position: relative;
+  top: 50%;
+  transform: translate(0%, -50%);
+  height: 30px;
+  margin-left: -10px;
+  border-radius: 30px;
+  background-color: #949ba0;
+}
+
+.search-btn {
+  float: left;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #949ba0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+}
+
+.search-btn::disabled{
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.search-box input::placeholder {
+  color: #c0c0c0;
+}
+
+.search-txt {
+  float: center;
+  padding: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 15px;
+  line-height: 30px;
+  width: 0; /* 추가 */
+  transition: 0.5s; /* 추가 */
+  font-family: "Jua", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.search-box:hover > form .search-txt {
+  width: 300px;
+}
+
+.search-box > form .search-txt:focus {
+  width: 300px;
+}
+
+.search-box:hover > form .search-btn {
+  background: none;
+}
+
+/* ///////////////알람 드롭다운 CSS 시작//////////// */
+.dropdown-item {
+  display: flex; /* Flexbox로 항목을 배치 */
+  align-items: center; /* 세로로 가운데 정렬 */
+  border-bottom: 1px solid #ddd; /* 아랫쪽에 회색 선 추가 */
+}
+
+.noti-icon {
+  padding-left: 8px;
+  width: 25px; /* 아이콘의 크기 */
+}
+
+.deleteicon {
+  position: absolute; /* 부모 요소를 기준으로 절대 위치 */
+  top: 10px; /* 부모 요소 상단에서 10px 떨어진 위치 */
+  right: 10px; /* 부모 요소 오른쪽에서 10px 떨어진 위치 */
+  width: 13px; /* 아이콘 크기 */
+  cursor: pointer; /* 클릭 가능한 커서로 변경 */
+}
+
+.deleteicon:hover {
+  transform: scale(1.3); /* 아이콘 크기를 1.3배로 확대 */
+  opacity: 0.7;
+}
+
+.noti-text {
+  position: relative; /* 삭제 아이콘을 기준으로 위치를 설정하기 위해 상대적인 위치 설정 */
+  display: flex;
+  flex-direction: column; /* 내용은 세로로 쌓기 */
+  width: 100%; /* noti-text가 부모의 100% 너비를 차지하게 설정 */
+  overflow: hidden; /* 내용이 넘치지 않도록 처리 */
+  padding-right: 17px;
+}
+
+.noti-content {
+  font-size: 12px; /* 알림 내용 폰트 크기 */
+  margin-bottom: 5px; /* 내용과 날짜 사이 간격 */
+  color: black; /* 글자 색 */
+}
+
+.noti-date {
+  font-size: 10px; /* 날짜 폰트 크기 */
+  color: #999; /* 날짜 색상 */
+}
+
+.noti-content-read {
+  font-size: 13px; /* 알림 내용 폰트 크기 */
+  margin-bottom: 5px; /* 내용과 날짜 사이 간격 */
+  color: #c2c1bf; /* 글자 색 */
+}
+
+.noti-date-read {
+  font-size: 11px; /* 날짜 폰트 크기 */
+  color: #c2c1bf; /* 날짜 색상 */
+}
+
+.dropdown-content-noti a {
+  flex-direction: column; /* 내용은 세로로 쌓기 */
+  text-decoration: none;
+  color: rgb(37, 37, 37);
+  font-size: 12px;
+  padding: 10px;
+}
+
+/* .dropdown-item에 호버 효과 추가*/
+.dropdown-content-noti .dropdown-item:hover {
+  background-color: #f1f1f1; /* 전체 배경색 변경 */
+}
+
+.dropdown-content-noti {
+  display: none; /*기본적으로 숨김*/
+}
+
+.dropdown:hover .dropdown-content-noti {
+  display: block; /* 부모 요소에 hover 시 표시 */
+}
+
+.dropdown-content-noti::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: rgb(194, 194, 194);
+}
+
+.dropdown-content-noti::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+
+/* 드롭다운이 보일 때 */
+.dropdown-content-noti.show {
+  display: block;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 190px;
+  background-color: #f9f9f9; /* 부드러운 배경색 */
+  margin: 0;
+}
+
+/* 메시지 텍스트 스타일 */
+.center-text {
+  color: #000; /* 텍스트 색상: 검정 */
+  font-size: 1rem; /* 적당한 크기 */
+  text-align: center; /* 가운데 정렬 */
+}
+
+/* ///////////////알람 드롭다운 CSS 끝//////////// */
+
+/* 중복 제거: dropdown hover 효과 통합 */
+.dropdown:hover .dropdown-content,
+.dropdown:hover .dropdown-content-noti {
+  display: block;
+}
+/* 상태 박스 공통 스타일 */
+.rental-status-box,
+.profile-status-box,
+.user-status-box {
+  margin-top: 50px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  background-color: #232323;
+  color: #fff;
+}
+
+/* 대여 현황 박스 스타일 */
+.rental-status-box {
+  opacity: 0.7;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 200px;
+  z-index: 500;
+  transition: opacity 0.3s ease;
+}
+
+.rental-status-box:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.rental-status-box h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.rental-status-box p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+  color: white;
+}
+
+.modal-content {
+  background-color: #232323;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow-y: auto;
+}
+
+/* 표 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #444;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #333;
+}
+
+tr:hover {
+  background-color: #444;
+}
+
+/* 닫기 버튼 스타일 */
+.close-btn {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  float: right;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 푸터 스타일 */
+.netflix-footer {
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #757575;
+  padding: 30px 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.footer-content {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 4%;
+}
+
+.footer-top {
+  margin-bottom: 30px;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding: 0;
+  margin: 0 0 30px 0;
+  list-style-type: none;
+}
+
+.footer-links li a {
+  color: #757575;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.footer-links li a:hover {
+  text-decoration: underline;
+}
+
+.language-selector select {
+  background-color: #000;
+  color: #757575;
+  padding: 12px 26px 12px 50px;
+  border: 1px solid #333;
+  font-size: 16px;
+  border-radius: 2px;
+}
+
+.footer-country {
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+.footer-copyright {
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 10px;
+}
+
+@media (max-width: 740px) {
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-links {
+    grid-template-columns: 1fr;
+  }
+}

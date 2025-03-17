@@ -1,0 +1,481 @@
+/* 기본 스타일 */
+body {
+  margin: 0;
+  font-family: "Jua", "Netflix Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  background-color: #151515;
+  color: #fff;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+
+/* 넷플릭스 프로필 스타일 */
+.netflix-profile-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 헤더 섹션 */
+.profile-header {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  padding: 60px 40px;
+  border-radius: 4px;
+  margin-bottom: 30px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.profile-image {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grade-icon {
+    height: 47.2px;
+    vertical-align: middle; /* 텍스트와 수직 정렬 */
+}
+
+.edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.edit-overlay i {
+  font-size: 24px;
+  color: #fff;
+}
+
+.profile-image:hover .edit-overlay {
+  opacity: 1;
+}
+
+.profile-info h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+.membership-date {
+  color: #999;
+  font-size: 1.1em;
+  display: block;
+}
+
+/* 콘텐츠 섹션 */
+.content-section {
+  background: #181818;
+  border-radius: 4px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.content-section h2 {
+  font-size: 1.5em;
+  margin: 0 0 20px 0;
+}
+
+.info-card {
+  background: #232323;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 150px;
+  color: #999;
+}
+
+.value {
+  flex: 1;
+}
+
+.pwEdit-btn ,
+.edit-btn {
+  margin-bottom: 20px;
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* 시청 활동 통계 */
+.activity-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #232323;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  background: #2a2a2a;
+}
+
+.stat-value {
+  font-size: 2em;
+  font-weight: bold;
+  color: #e50914;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  color: #999;
+  font-size: 0.9em;
+}
+
+/* 프로필 상태 박스 */
+.profile-status-box {
+  position: absolute;
+  top: 100px;
+  right: 50%;
+  transform: translateX(50%);
+  z-index: 500;
+  width: 500px;
+}
+
+.profile-status-box .profile-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-status-box .profile-name {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* 유저 상태 정보 박스 */
+.user-status-box {
+  position: absolute;
+  top: 100px;
+  right: 20%;
+  z-index: 300;
+  width: 400px;
+}
+
+.user-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-info-table th,
+.user-info-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.user-info-table th {
+  width: 30%;
+  color: #999;
+}
+
+.user-info-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 프로필 컨테이너 */
+.myprofile-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 20px;
+  overflow-x: auto;
+}
+
+.myprofile-picture {
+  margin: 100px 0 100px 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
+}
+
+.myprofile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.left-menu-icon {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+/* 영화 리스트 */
+.movie-list-container {
+  border-radius: 30px;
+  margin-left: 50px;
+  padding: 0 20px;
+  z-index: 500;
+}
+
+.movie-list {
+  display: flex;
+  align-items: center;
+  height: 500px;
+  padding: 0 20px;
+  position: relative;
+  transition: all 1s ease-in-out;
+  background-color: #151515;
+  overflow-x: auto;
+}
+
+.movie-list-item {
+  box-shadow: 0px 0px 30px 10px #151515;
+  border-radius: 30px;
+  background-color: #151515;
+  margin-right: 30px;
+  position: relative;
+  z-index: 500;
+}
+
+/* 영화 포스터 모달 */
+#movieListModal .modal-content {
+  width: 80%;
+  max-width: 1200px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: #141414;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.movie-item {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.movie-item:hover {
+  transform: scale(1.05);
+}
+
+.movie-item img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.movie-item p {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#modalTitle {
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e50914;
+}
+
+#closeMovieModal {
+  font-size: 28px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#closeMovieModal:hover {
+  color: #e50914;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .activity-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .info-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  .label {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .edit-btn {
+    margin-top: 10px;
+  }
+  .profile-status-box,
+  .user-status-box {
+    position: static;
+    width: 90%;
+    margin: 20px auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-stats {
+    grid-template-columns: 1fr;
+  }
+  .profile-header {
+    padding: 30px 20px;
+  }
+  .content-section {
+    padding: 20px;
+  }
+  .myprofile-picture {
+    margin: 50px auto;
+  }
+}
+
+.rental-grid {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth; /* 부드러운 스크롤 */
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rental-item {
+  flex: 0 0 200px;
+  min-width: 200px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+/* 스크롤바 스타일링 */
+.rental-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.rental-grid::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.rental-grid::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 4px;
+}
+
+.rental-grid::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+.rental-item:hover {
+  transform: scale(1.05);
+}
+
+.rental-poster {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.rental-info {
+  padding: 12px;
+  text-align: center;
+}
+
+.rental-info h3 {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rental-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #999;
+}
+
+

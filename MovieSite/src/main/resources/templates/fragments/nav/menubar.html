@@ -1,0 +1,223 @@
+<div th:fragment="menubar">
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <h1 class="logo"><a href="/board/list">MovieDovie</a></h1>
+            </div>
+            <div class="menu-list">
+                <div class="search-box" style="position:relative; margin-top:27px;">
+                    <form action="/board/search" method="get">
+                        <input class="search-txt" name="keyword" type="text" placeholder="  작품, 배우, 제작사를 검색해보세요">
+                        <button class="search-btn" type="submit" onclick="searchMovies()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+          	<div class="profile-container">
+	            <div class="dropdown">
+	            	<div class="bell-box">	
+	      				<i class="fas fa-bell" style="position:relative; font-size:20px; margin-top:15px; margin-bottom:15px; margin-left:10px;margin-right:25px;"></i>
+	      				<p id="notification-count"></p>
+	      			</div>
+	     			<div class="dropdown-content-noti">
+						 <div th:if="${noti != null and noti.size() > 0}">
+						    <div th:each="noti : ${noti}">
+						        <div class="dropdown-item" th:id="'noti-item-' + ${noti.seqno}" th:data-seqno="${noti.seqno}"> <!-- 각 알림에 고유 ID 추가 -->
+						            <th:block th:if="${#strings.equals(noti.is_read, 'N')}"> <!-- 안읽은 알람은 검정으로 -->
+						                <th:block th:if="${#strings.equals(noti.notitype, 'completed')}">
+						                    <img class="noti-icon" src="/images/img/noti_completed.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'reply')}">
+						                    <img class="noti-icon" src="/images/img/noti_reply.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'rent')}">
+						                    <img class="noti-icon" src="/images/img/noti_rent.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'grade')}">
+						                    <img class="noti-icon" src="/images/img/noti_grade.png" alt="">
+						                </th:block>
+						                <div class="noti-text">
+						                	<th:block th:if="${#strings.equals(noti.notitype, 'reply') or #strings.equals(noti.notitype, 'completed')}">
+							                    <a th:href="@{'/board/requestView?seqno=' + ${noti.requestEntity.getSeqno()} + '&page=1'}">
+							                        <b><span class="noti-content" th:text="${noti.content}"></span></b>
+							                        <span class="noti-date" th:text="${#temporals.format(noti.created_at, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							                    </a>
+							                </th:block>
+							                <th:block th:if="${#strings.equals(noti.notitype, 'rent') or #strings.equals(noti.notitype, 'grade')}">
+							                	<a href="/board/mypage">
+							                        <b><span class="noti-content" th:text="${noti.content}"></span></b>
+							                    </a>
+							                </th:block>
+						                    <!-- 삭제 아이콘 추가 -->
+						                    <img class="deleteicon" src="/images/img/noti_delete.png" alt="삭제 아이콘" 
+						                         th:attr="data-seqno=${noti.seqno}" />
+						                </div>
+						            </th:block>
+						
+						            <th:block th:if="${#strings.equals(noti.is_read, 'Y')}"> <!-- 이미 읽은 알람은 회색으로 -->
+						                <th:block th:if="${#strings.equals(noti.notitype, 'completed')}">
+						                    <img class="noti-icon" src="/images/img/noti_completed_read.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'reply')}">
+						                    <img class="noti-icon" src="/images/img/noti_reply_read.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'rent')}">
+						                    <img class="noti-icon" src="/images/img/noti_rent_read.png" alt="">
+						                </th:block>
+						                <th:block th:if="${#strings.equals(noti.notitype, 'grade')}">
+						                    <img class="noti-icon" src="/images/img/noti_grade_read.png" alt="">
+						                </th:block>
+						                <div class="noti-text">
+						                	<th:block th:if="${#strings.equals(noti.notitype, 'reply') or #strings.equals(noti.notitype, 'completed')}">
+							                    <a th:href="@{'/board/requestView?seqno=' + ${noti.requestEntity.getSeqno()} + '&page=1'}">
+							                        <b><span class="noti-content-read" th:text="${noti.content}"></span></b>
+							                        <span class="noti-date-read" th:text="${#temporals.format(noti.created_at, 'yyyy-MM-dd HH:mm')}"></span>
+							                    </a>
+							                </th:block>
+							                <th:block th:if="${#strings.equals(noti.notitype, 'rent') or #strings.equals(noti.notitype, 'grade')}">
+							                	<a href="/board/mypage">
+							                        <b><span class="noti-content-read" th:text="${noti.content}"></span></b>
+							                    </a>
+							                </th:block>
+						                    <!-- 삭제 아이콘 추가 -->
+						                    <img class="deleteicon" src="/images/img/noti_delete.png" alt="삭제 아이콘" 
+						                         th:attr="data-seqno=${noti.seqno}" />
+						                </div>
+						            </th:block>
+						        </div>
+						    </div>
+					    </div>
+					    <div th:if="${noti == null || noti.size() == 0}">
+					        <div class="center-container">
+						        <p class="center-text">현재 알람이 없습니다</p>
+						    </div>
+					    </div>
+					</div>  
+	           	</div>
+
+                <div class="profile-text-container">[[${member.nickname}]]님, 안녕하세요!</div>
+                <div class="dropdown">
+                    <a href="/board/mypage">
+                        <img class="profile-picture" th:src="@{'/profile/' + ${member.storedFilename}}" alt="">
+                    </a>
+      				<div class="dropdown-content">
+            			<a href="/board/mypage">프로필 정보</a>
+        				<a href="/member/logout">로그 아웃</a>
+        				<a href="/member/selectGenre">내 선호 장르 변경</a>
+        				<a href="/board/requestList">내 요청 사항</a>
+        				<a href="/board/mypage">내 대여 현황</a>
+               	 	</div>
+             	</div>
+                <div class="mypoint-container">
+                    <p class="mypoint-btn">내 포인트 :</p>
+                    <p class="mypoint-btn" th:text="${point == 0} ? '0P' : ${point} + ' P'"></p>
+                </div>
+            </div>    
+        </div>
+    </div>
+    
+	<script>
+    const searchInput = document.querySelector('.search-txt');
+    const searchButton = document.querySelector('.search-btn');
+    const mypointBtns = document.querySelectorAll('.mypoint-btn');
+
+    mypointBtns.forEach(function(mypointBtn) {
+        mypointBtn.addEventListener('click', function() {
+            window.location.href = '/board/pointPage';
+        });
+    });
+
+    // 페이지 로드 시 초기 버튼 상태 설정
+    document.addEventListener('DOMContentLoaded', () => {
+        searchButton.disabled = searchInput.value.trim() === '';
+    });
+
+    // 입력 필드 내용 변경 이벤트 리스너 추가
+    searchInput.addEventListener('input', () => {
+        // 입력 필드에 값이 있으면 버튼 활성화, 없으면 비활성화
+        searchButton.disabled = searchInput.value.trim() === '';
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+       
+    	// 1. 알림 갯수 업데이트 기능
+        function updateNotificationCount() {
+            const dropdownItems = document.querySelectorAll('.dropdown-content-noti .dropdown-item');
+            const notificationCount = document.getElementById('notification-count');
+            let itemCount = dropdownItems.length;
+
+            // 항목 수가 5 이상일 경우 "4+" 표시
+            notificationCount.textContent = itemCount >= 5 ? '4+' : itemCount;
+        }
+
+        // 초기 알림 갯수 업데이트
+        updateNotificationCount();
+
+        // 2. 삭제 아이콘 클릭 이벤트 추가
+        document.querySelectorAll('.deleteicon').forEach(function(deleteIcon) {
+            deleteIcon.addEventListener('click', function(event) {
+                const seqno = event.target.getAttribute('data-seqno');
+
+                // 삭제 요청 보내기
+                const formData = new FormData();
+                formData.append('seqno', seqno);
+
+                fetch('/deleteNoti', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            const notificationItem = document.getElementById(`noti-item-${seqno}`);
+                            if (notificationItem) {
+                                notificationItem.remove();
+                                updateNotificationCount();
+                            }
+                        } else {
+                            alert('알림 삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('알림 삭제 중 오류가 발생했습니다.');
+                        console.error(error);
+                    });
+            });
+        });
+
+        // 3. 알림 클릭 시 읽음 처리
+        document.querySelectorAll('.dropdown-item').forEach(function(notiItem) {
+            notiItem.addEventListener('click', function(event) {
+                const seqno = event.currentTarget.getAttribute('data-seqno');
+                console.log('읽음 처리: seqno =', seqno);
+
+                const params = new URLSearchParams();
+                params.append('seqno', seqno);
+
+                fetch('/notiIsRead', {
+                    method: 'POST',
+                    body: params,
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            const notiElement = document.getElementById(`noti-item-${seqno}`);
+                            if (notiElement) {
+                                // UI 업데이트 예제
+                                console.log('알림 읽음 처리 성공');
+                            }
+                        } else {
+                            alert('알림 읽음 처리 실패');
+                        }
+                    })
+                    .catch(error => {
+                        alert('알림 읽음 처리 중 오류가 발생했습니다.');
+                        console.error(error);
+                    });
+            });
+        });
+    });
+	</script>
+</div>
+

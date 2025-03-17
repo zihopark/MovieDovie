@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>이메일 찾기</title>
+<style>
+/* 기본 스타일 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #141414; /* 넷플릭스 특유의 어두운 배경 */
+    color: #ffffff; /* 텍스트는 밝은 색상으로 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 메인 컨테이너 스타일 */
+.main {
+    text-align: center;
+}
+
+.ModifyForm {
+    background-color: #222222; /* 섹션 배경은 어두운 회색 */
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+}
+
+/* 폼 제목 스타일 */
+.ModifyForm h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #e50914; /* 넷플릭스 레드 */
+    text-align: center;
+}
+
+/* 입력 필드 스타일 */
+.input_field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    background-color: #141414; /* 입력 배경 */
+    color: #ffffff; /* 텍스트 색상 */
+    font-size: 16px;
+}
+
+.input_field::placeholder {
+    color: #888888; /* 플레이스홀더 색상 */
+}
+
+/* 버튼 스타일 */
+.btn_write, .btn_cancel {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn_write {
+    background-color: #e50914; /* 넷플릭스 레드 */
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.btn_write:hover {
+    background-color: #f40612; /* 더 밝은 빨간색 */
+}
+
+.btn_cancel {
+    background-color: #333333;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.btn_cancel:hover {
+    background-color: #444444; /* 조금 더 밝은 회색 */
+}
+
+/* 검색 결과 섹션 */
+.EmailSearchResult {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #333333; /* 검색 결과 배경 */
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+}
+</style>
+
+
+<script>
+const EmailSearchCheck = async () => {
+	if(username.value == "") { alert("이름을 입력하세요."); username.focus();  return false; }
+	if(telno.value == '') { alert("전화번호를 입력하세요."); telno.focus(); return false; }
+	
+	let formData = new FormData(EmailSearchForm);
+	
+	await fetch("/member/searchEmail", {			
+		method: 'POST',
+		body: formData			
+		
+	}).then((response)=> response.json())
+	  .then((data) => {
+		  if(data.message !== 'ID_NOT_FOUND'){				
+			let result = "<br><br><h1>이메일 : " + data.message + "</h1>";					
+			EmailSearchResult.innerHTML = result;
+		  } else {
+			  alert("해당 조건에 맞는 이메일이 존재하지 않습니다.");
+		  }	
+	}).catch((error)=> {			
+		console.log((error)=> console.log("error = " + error))
+	});
+}
+
+const press = () => {
+	
+	if(event.keyCode == 13){ EmailSearchCheck (); }
+	
+}
+</script>
+</head>
+<body>
+	<div class="main" align="center"></div>
+	<div class="ModifyForm">
+				<form name="EmailSearchForm" class="EmailSearchForm" id="EmailSearchForm" method="post">
+	        		<h1>이메일 찾기</h1>
+	     			<div class="EmailSearchFormDivision">
+	         			<input type="text" name="username" id="username" class="input_field" placeholder="이름을 입력하세요."><br><br>
+	         			<input type="text" name="telno" id="telno" class="input_field" onkeydown="press(this.form)" placeholder="전화번호를 입력하세요."><br><br>
+	         			<input type="button" class="btn_write" value="이메일 찾기" onclick="EmailSearchCheck()"> <br><br>
+	            		<input type="button" class="btn_cancel" value="홈으로" onclick='javascript:location.href="/"'> 
+	     			</div> 
+				</form>
+				<div class='EmailSearchResult' id='EmailSearchResult'></div>
+	    	</div>
+	</div>
+</body>
+</html>

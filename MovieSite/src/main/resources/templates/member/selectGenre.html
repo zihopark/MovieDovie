@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Movie Preference Selection</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless/borderless.css"
+    />
+  </head>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-image: url("/images/너희결혼식.jpg");
+      background-color: rgba(0, 0, 0, 0.5);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 30px;
+    }
+
+    .genres {
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-wrap: wrap;
+      border-radius: 10px;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      max-width: 600px;
+    }
+
+    .genre {
+      background-color: rgba(0, 0, 0, 0);
+      border-radius: 5px;
+      padding: 10px 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .genre:hover {
+      background-color: black;
+    }
+
+    .clicked {
+      background-color: white;
+      color: black;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    button {
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3700b3;
+    }
+  </style>
+  <script defer>
+    window.onload = () => {
+      const genres = document.querySelectorAll(".genre");
+
+      const clicked = (elem) => {
+        const clickedGenres =
+          document.querySelectorAll(".genre.clicked").length;
+
+        if (elem.classList.contains("clicked")) {
+          elem.classList.remove("clicked");
+        } else {
+          if (clickedGenres >= 3) {
+            Swal.fire({
+              text: "선택 가능 갯수를 초과하였습니다.",
+              icon: "warning",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+            return;
+          }
+          elem.classList.toggle("clicked");
+        }
+      };
+      genres.forEach((genre) => {
+        genre.addEventListener("click", () => clicked(genre));
+      });
+    };
+
+    //선택한 장르들을 저장해 서버로 보낸다.
+    const saveToGenres = () => {
+      const selectedGenres = Array.from(
+        document.querySelectorAll(".genre.clicked")
+      ).map((genre) => genre.textContent);
+
+      if (selectedGenres.length === 0) {
+        Swal.fire({
+          text: "장르를 선택해주세요.",
+          icon: "warning",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        return;
+      }
+
+      fetch("/member/selectGenre", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ genres: selectedGenres }),
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.success) {
+            Swal.fire({
+              text: "선호 장르가 저장되었습니다.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+            location.href = "/board/list";
+          } else {
+            alert("저장 중 오류가 발생했습니다.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("저장 중 오류가 발생했습니다.");
+        });
+    };
+  </script>
+  <body>
+    <div class="overlay">
+      <h1>[[${member.nickname}]]님이 좋아하는 장르</h1>
+      <p>최대 3개까지 골라주세요. 취향에 꼭 맞는 영화를 추천해 드릴게요!</p>
+      <div class="genres">
+        <th:block th:each="genre : ${genres}">
+          <div
+            class="genre"
+            th:text="${genre.key}"
+            th:classappend="${favGenre != null and 
+                     ((favGenre['genre1'] != null and favGenre['genre1'] == genre.key) or 
+                      (favGenre['genre2'] != null and favGenre['genre2'] == genre.key) or 
+                      (favGenre['genre3'] != null and favGenre['genre3'] == genre.key))} ? 'clicked' : ''"
+          ></div>
+        </th:block>
+      </div>
+      <div class="buttons">
+        <button onclick="saveToGenres()">저장하기</button>
+      </div>
+    </div>
+  </body>
+</html>

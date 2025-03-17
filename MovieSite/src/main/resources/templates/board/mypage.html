@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/mypage.css" />
+    <div th:replace="~{fragments/header}"></div>
+    <title>MyPage</title>
+  </head>
+  <body>
+    <div th:replace="~{fragments/nav/menubar}"></div>
+
+    <!-- 대여현황 박스 -->
+    <div class="rental-status-box" id="rentalStatusBox">
+      <h3>대여 현황</h3>
+      <p
+        th:text="${#lists.size(rents) == 0 ? '현재 대여 중인 영화가 없습니다.' : '현재 대여 중 : ' + #lists.size(rents)}"
+      ></p>
+    </div>
+
+    <div id="rentalModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h2>대여 리스트</h2>
+
+        <!-- 대여 목록 표 -->
+        <table>
+          <thead>
+            <tr>
+              <th>영화 이름</th>
+              <th>대여 만료 날짜</th>
+            </tr>
+          </thead>
+          <tbody style="overflow-y: auto">
+            <tr th:each="rent : ${rents}"
+                th:onclick="|location.href='@{/board/movieDetail(movieId=${rent.id})}'|"
+                style="cursor: pointer"
+              >
+              <td th:text="${rent.title}"></td>
+              <td
+                th:text="${#temporals.format(rent.returndate,'yyyy-MM-dd HH:mm a')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="netflix-profile-wrapper">
+      <!-- 프로필 헤더 섹션 -->
+      <div class="profile-header">
+        <div class="header-content">
+          <div class="profile-image">
+            
+            <input type="file" name="fileUpload" id="imageFile" style="display:none;"0/>
+					<div class="imageZone" id="imageZone">
+						<img  class ="imageZone" id="imageZone" th:src="@{'/profile/' + ${member.storedFilename}}" alt="프로필 이미지">
+            <div class="edit-overlay">
+              <i class="fas fa-camera"></i>
+            </div>
+					</div>
+          </div>
+          <div class="profile-info">
+            
+            
+            <h1 style="display: flex; align-items: center;">
+	            <th:block th:if="${#strings.equals(member.grade, 'BRONZE')}">
+	                <img class="grade-icon" src="/images/img/bronze.png" alt="">
+	            </th:block>
+	            <th:block th:if="${#strings.equals(member.grade, 'SILVER')}">
+	                <img class="grade-icon" src="/images/img/silver.png" alt="">
+	            </th:block>
+	            <th:block th:if="${#strings.equals(member.grade, 'GOLD')}">
+	                <img class="grade-icon" src="/images/img/gold.png" alt="">
+	            </th:block>
+	            <th:block th:if="${#strings.equals(member.grade, 'PLATINUM')}">
+	                <img class="grade-icon" src="/images/img/platinum.png" alt="">
+	            </th:block>
+	            <th:block th:if="${#strings.equals(member.grade, 'DIAMOND')}">
+	                <img class="grade-icon" src="/images/img/diamond.png" alt="">
+	            </th:block>
+	            <span th:text="${member.nickname}" style="font-size: 35px; margin: 0; display: inline-block;"></span>&nbsp;
+	            <span th:text="'(' + ${member.grade} + ' 등급)'" style="font-size:25px; color: #999; display: inline-block;" ></span>
+            </h1>
+            
+            <br>
+            <span class="membership-date">· 회원 가입일 : [[${#temporals.format(member.regdate, 'yyyy년 MM월 dd일')}]]</span>
+            <th:block th:if="${#strings.equals(nextTier, 'DIAMOND')}">
+            	<span class="membership-date">· 다음 달 예정 등급 : [[${nextTier}]] (최고 등급입니다!)</span>
+            </th:block>
+            <th:block th:if="${!#strings.equals(nextTier, 'DIAMOND')}">
+            	<span class="membership-date">· 다음 달 예정 등급 : [[${nextTier}]] <br>&nbsp;&nbsp;([[${daysUntilFirstOfMonth}]]일 동안 [[${upgradeMessage}]])</span>
+            </th:block>
+          </div>
+        </div>
+      </div>
+      <!-- 대여 목록 표 -->
+      <div class="content-section">
+        <h2 style="margin-bottom: 10px">현재 대여 목록</h2>
+        <div class="rental-grid">
+          <h2 th:text="${#lists.size(rents) == 0} ? '현재 대여 목록이 없습니다.'"></h2>
+          <div class="rental-item" th:each="rent : ${rents}">
+            <a
+              th:href="@{/board/movieDetail(movieId=${rent.id})}"
+              style="text-decoration: none; color: inherit"
+            >
+              <img
+                th:src="@{'https://image.tmdb.org/t/p/original' + ${rent.posterPath}}"
+                alt="영화 포스터"
+                class="rental-poster"
+              />
+              <div class="rental-info">
+                <p
+                  th:text="'반납일 : ' + ${#temporals.format(rent.returndate,'yyyy-MM-dd HH:mm')}"
+                ></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="profile-content">
+        <!-- 멤버십 & 결제 정보 -->
+        <div class="content-section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <h2>결제 정보</h2>
+          </div>
+          <div class="info-card">
+            <div class="info-row">
+              <span class="label">누적 결제 금액</span>
+              <span class="value" th:text="${accumulatedPayment} + ' 원'"></span>
+            </div>
+            <div class="info-row">
+              <span class="label">이번 달 결제 금액</span>
+              <span class="value" th:text="${currentSales} + ' 원'"></span>
+            </div>
+            <div class="info-row">
+              <span class="label">나의 포인트</span>
+              <span class="value" th:text="${point != null ? point : 0} + ' P'"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 프로필 콘텐츠 섹션 -->
+      <div class="profile-content">
+        <!-- 멤버십 & 결제 정보 -->
+        <div class="content-section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <h2>회원 정보</h2>
+            <div>
+              <button class="edit-btn">회원정보 수정</button>
+              <button class="pwEdit-btn">비밀번호 수정</button>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-row">
+              <span class="label">이메일</span>
+              <span class="value">[[${member.email}]]</span>
+            </div>
+            <div class="info-row">
+              <span class="label">전화번호</span>
+              <span class="value">[[${member.telno}]]</span>
+            </div>
+            <div class="info-row">
+              <span class="label">닉네임</span>
+              <span class="value">[[${member.nickname}]]</span>
+            </div>
+            <div class="info-row">
+              <span class="label">성별</span>
+              <span class="value">[[${member.gender}]]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 시청 활동 -->
+      <div class="content-section">
+        <h2>시청 활동</h2>
+        <div class="activity-stats">
+          <div class="stat-card" data-type="watches">
+            <div class="stat-value">[[${#lists.size(watches)}]]</div>
+            <div class="stat-label">시청한 영화</div>
+          </div>
+          <div class="stat-card" data-type="likes">
+            <div class="stat-value">[[${#lists.size(likes)}]]</div>
+            <div class="stat-label">좋아요한 영화</div>
+          </div>
+          <div class="stat-card" data-type="bookmarks">
+            <div class="stat-value">[[${#lists.size(bookmarks)}]]</div>
+            <div class="stat-label">찜한 영화</div>
+          </div>
+          <div class="stat-card" data-type="pastRents">
+            <div class="stat-value">[[${#lists.size(pastRents)}]]</div>
+            <div class="stat-label">나의 대여 기록</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 시청 활동 모달 -->
+    <div id="activityModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeActivityModal">&times;</span>
+        <h2 id="modalTitle">시청 활동</h2>
+
+        <!-- 시청한 영화 목록 -->
+        <div class="activity-list" id="watchesList">
+          <table>
+            <thead>
+              <tr>
+                <th>영화 제목</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="watch : ${watches}"
+                th:onclick="|location.href='@{/board/movieDetail(movieId=${watch.id})}'|"
+                style="cursor: pointer"
+              >
+                <td th:text="${watch.title}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 좋아요한 영화 목록 -->
+        <div class="activity-list" id="likesList">
+          <table>
+            <thead>
+              <tr>
+                <th>영화 제목</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="like : ${likes}"
+                th:onclick="|location.href='@{/board/movieDetail(movieId=${like.id})}'|"
+                style="cursor: pointer"
+              >
+                <td th:text="${like.title}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 찜한 콘텐츠 목록 -->
+        <div class="activity-list" id="bookmarksList">
+          <table>
+            <thead>
+              <tr>
+                <th>영화 제목</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="bookmark : ${bookmarks}"
+                th:onclick="|location.href='@{/board/movieDetail(movieId=${bookmark.id})}'|"
+                style="cursor: pointer"
+              >
+                <td th:text="${bookmark.title}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+         <!-- 과거 대여 콘텐츠 목록 -->
+         <div class="activity-list" id="pastRentsList">
+          <table>
+            <thead>
+              <tr>
+                <th>영화 제목</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="pastRent : ${pastRents}"
+                th:onclick="|location.href='@{/board/movieDetail(movieId=${pastRent.id})}'|"
+                style="cursor: pointer"
+              >
+                <td th:text="${pastRent.title}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+window.onload = () => {
+			
+      var imgCheck = "N";
+      var imgZone = document.querySelector('#imageZone');
+      var fileEvent = document.querySelector('#imageFile');
+          
+      //imageZone 영역 클릭 시 파일이벤트 처리. 자바스크립트에선 이벤트 발생 시 이벤트 정보를 담고 있는 event(e)라는 객체를 자동 생성.
+      imgZone.addEventListener('click', (e)=> {
+        fileEvent.click(e); //사용자가 만든 UI를 통해 <input type="file">을 클릭하는 것과 같은 효과를 내게 됨.
+      });
+          
+      fileEvent.addEventListener('change', (e)=> {
+        const files = e.target.files;//선택한 파일 정보가 e.target.files(배열)에 저장
+        showImage(files); 
+      })
+          
+      const showImage = (files) => {
+           imgZone.innerHTML = '';
+           const imgFile = files[0];
+    
+           console.log(files.type);
+        console.log(imgFile.type);
+           if (imgFile.type.indexOf("image") < 0) {
+               alert("이미지 파일만 올려 주세요.");
+               return false;
+           }
+    
+           const reader = new FileReader();
+           reader.onload = function(event) {
+               const imgElement = document.createElement('img');
+               imgElement.src = event.target.result;
+               imgElement.style.width = "100%";  // 이미지 영역에 맞게 조정
+               imgElement.style.height = "auto";
+               imgElement.style.objectFit = "contain";  // 여백 없이 맞춤
+               imgZone.appendChild(imgElement);
+           };
+    
+           reader.readAsDataURL(imgFile);
+           imgCheck = "Y";
+
+           
+
+           const formData = new FormData();
+           formData.append('fileUpload', imgFile);
+
+           //선택한 후 저장
+           fetch('/member/profileUpload', {
+            method: 'POST',
+            body: formData
+           }).then(response => response.json())
+           .then(data => {
+            console.log(data);
+            location.reload();
+           })
+           .catch(error => console.error('Error:', error));
+      };
+    }
+
+      // HTML 요소들 선택
+      const rentalStatusBox = document.getElementById("rentalStatusBox");
+      const rentalModal = document.getElementById("rentalModal");
+      const closeModal = document.getElementById("closeModal");
+      const editBtn = document.querySelector(".edit-btn");
+      const pwEditBtn = document.querySelector(".pwEdit-btn");
+
+      pwEditBtn.addEventListener("click", function () {
+        window.location.href = "/member/modifyMemberPassword";
+      });
+
+      editBtn.addEventListener("click", function () {
+        window.location.href = "/member/modifyMemberInfo";
+      });
+
+      // 대여 현황 박스를 클릭하면 모달 열기
+      rentalStatusBox.addEventListener("click", function () {
+        rentalModal.style.display = "block";
+      });
+
+      // 모달 닫기 버튼 클릭하면 모달 닫기
+      closeModal.addEventListener("click", function () {
+        rentalModal.style.display = "none";
+      });
+
+      // 모달 밖을 클릭하면 모달 닫기
+      window.addEventListener("click", function (event) {
+        if (event.target === rentalModal) {
+          rentalModal.style.display = "none";
+        }
+      });
+
+      const activityModal = document.getElementById("activityModal");
+      const closeActivityModal = document.getElementById("closeActivityModal");
+      const statCards = document.querySelectorAll(".stat-card");
+      const modalTitle = document.getElementById("modalTitle");
+      const activityLists = document.querySelectorAll(".activity-list");
+
+      // 각 통계 카드 클릭 이벤트
+      statCards.forEach((card) => {
+        card.addEventListener("click", function () {
+          const type = this.getAttribute("data-type");
+          const titles = {
+            watches: "시청한 영화",
+            likes: "좋아요한 영화",
+            bookmarks: "찜한 영화",
+            pastRents: "과거 대여했던 영화",
+          };
+
+          modalTitle.textContent = titles[type];
+          activityLists.forEach((list) => (list.style.display = "none"));
+          document.getElementById(`${type}List`).style.display = "block";
+          activityModal.style.display = "block";
+        });
+      });
+
+      // 모달 닫기
+      closeActivityModal.addEventListener("click", function () {
+        activityModal.style.display = "none";
+      });
+
+      // 모달 외부 클릭시 닫기
+      window.addEventListener("click", function (event) {
+        if (event.target === activityModal) {
+          activityModal.style.display = "none";
+        }
+      });
+    </script>
+
+    <div th:replace="~{fragments/footer}"></div>
+  </body>
+</html>

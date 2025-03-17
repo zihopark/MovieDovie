@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 활동 통계</title>
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/css/movieListStyle.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+	<style>
+		#wrap {width: 1450px; height: 1000px; font-size: 17px; text-align: center; margin : auto; }
+	 	
+	 	.side {
+	 		display: flex;
+		 	float: left; width: 900px; height: 950px; text-align: center; 
+	    	align-items: center; /* 수평 중앙 정렬 */
+	    	justify-content: space-between; /* 양쪽으로 배치 */
+	    }
+	    
+	    .content1 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 180px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		.content2 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 310px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		 .content3 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 110px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+		
+		.content4 {
+		    display: flex; align-items: center; justify-content: space-between;
+		    align-items: center; /* 수직 중앙 정렬 */
+		    width: 550px;
+		    height: 350px; /* 고정 높이 유지 */
+		    text-align: center;
+		    float: left;
+		    margin: auto;
+		}
+
+	 	.content {
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+            font-size: 13px; 
+            background-color: white;
+            padding: 3%; /* 패딩 10% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            justify-content: space-between; /* 양쪽으로 배치 */
+		    align-items: center; /* 수평 중앙 정렬 */
+        }
+        
+        
+        .horicontent {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+        }
+        
+        .horicontentforCR {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .horicontentmem {
+            display: flex;  
+   			justify-content: space-between; /* 양쪽으로 배치 */
+   			align-items: center; /* 수직 방향 중앙 정렬 */
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+        }
+        
+		.left-div, .right-div {
+		    width: 50%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		    justify-content: space-between; /* 양쪽으로 배치 */
+		    align-items: center; /* 수평 중앙 정렬 */
+		}
+		
+		.left70-div {
+		    width: 70%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		}
+		
+		.right30-div {
+		    width: 30%; /* 여백을 고려하여 너비 설정 */
+		    box-sizing: border-box;
+		    text-align: left;
+		    padding-left: 10px;
+		}
+		
+		
+		
+        #RentStatus {
+		  display: block;
+		  margin: 0 auto;
+		}
+        
+	    .positive {
+            color: tomato; /* 방문자 수 증가 */
+        }
+        .negative {
+            color: rgb(28, 177, 227); /* 방문자 수 감소 */
+        }
+        .nochange {
+        	color: gray;
+        }
+        
+        h2{
+          font-size: 17px;
+        }
+        
+        table {
+		  border-collapse: collapse;
+		  width: 100%;
+		  margin: 1rem auto;
+		  background-color: white;
+		}
+		
+		/* 테이블 행 */
+		th, td {
+		  padding: 1.2px;
+		  text-align: center;
+		  font-size: 13.5px;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		}
+		
+		th {
+		  background-color: #1b1b1b;
+		  color: white;
+		}
+
+		/* 테이블 비율 */
+		th:nth-child(1),
+		td:nth-child(1) {
+		  width: 10%;
+		}
+		
+		th:nth-child(2),
+		td:nth-child(2) {
+		  width: 35%;
+		}
+		
+		th:nth-child(3),
+		td:nth-child(3) {
+		  width: 35%;
+		}
+		
+		th:nth-child(4),
+		td:nth-child(4) {
+		  width: 20%;
+		}
+		
+		tr:nth-child(even) {
+		  background-color: #4dbf0010;
+		}
+		
+		.statuscontent {
+            width: 100%; /* 부모 너비에 맞춤 */
+            height: 100%; /*부모 너비에 맞춤*/
+            text-align: center;
+            background-color: white;
+            padding: 3%; /* 패딩 10% */
+            border: 1.8px solid lightgray;
+            box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+            display: flex; /* 콘텐츠를 flexbox로 설정 */
+		    flex-direction: column; /* 세로 정렬 */
+		    justify-content: center; /* 수직 중앙 정렬 */
+		    align-items: center; /* 수평 중앙 정렬 */
+        }
+		
+		.status-container {
+		    margin: auto;
+		    display: flex; /* 이미지를 왼쪽에, 텍스트를 오른쪽에 배치 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		}
+		
+		.statusicon {
+		    width: 80px; /* 이미지 크기 설정 */
+		    height: 80px; /* 이미지 크기 설정 */
+		    margin-right: 15px; /* 이미지와 텍스트 간 간격 */
+		}
+		
+		.status-text {
+		    font-size: 16px; /* 텍스트 크기 */
+		    line-height: 1.5; /* 텍스트 간격 조정 */
+		}
+		
+		.pending-highlight {
+		    font-size: 25px; /* 텍스트 크기 키우기 */
+		    color: #FF6384; /* 빨간색으로 강조 */
+		    font-weight: bold; /* 텍스트 굵게 */
+		    opacity: 1;
+  			animation: animate 1s infinite;
+		}
+		
+		@keyframes animate {
+		  0% {opacity: 1;}
+		  50% {opacity: 0.5;}
+		  100% {opacity: 1;}
+		}
+			
+		a.pending {
+		  text-decoration : none;
+		  color:  #FF6384;
+		}
+		
+		a.pending:hover{
+			text-decoration : underline;
+		}
+		
+		
+		.progress-bar {
+		    width: 100%;
+		    height: 37px;
+		    background-color: #EFEFEF;
+		    font-weight: 600;
+		    position: relative;
+		}
+		
+		.progress-bar .progress {
+            height: 100%;
+            padding: 0;
+            text-align: center;
+            background-color:#4dbf00;
+            color: white;
+            display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    position: relative;
+        }
+        
+        
+		.progress-text {
+		    position: relative;
+		    right: 5px;
+		    color: white;
+		    transition: all 0.3s ease; /* 애니메이션 추가 */
+		}
+        
+        .canvas-container {
+		    position: relative;
+		    z-index: 10;
+		    width: 100%;
+		    height: auto;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+				
+	</style>
+
+
+</head>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+<div th:replace="~{fragments/nav/masterMenubar}"></div>
+<br><br><br><br>
+
+
+<div id="wrap">
+	<div class="side">
+		<div class="content">
+		<h2>월별 매출 현황</h2><br><br>
+		
+		<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 350px;">
+		  <canvas id="MonthlySales"></canvas>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+		  Promise.all([
+			  fetch('/master/MonthlySalesCurrentYear').then(response => response.json()),
+			  fetch('/master/MonthlySalesLastYear').then(response => response.json())
+		  ])
+	  	  .then(([currentYearData, lastYearData]) => {
+		      // 각 월의 대여 수를 저장할 배열 초기화
+		      const currentYearSales = Array(12).fill(0);
+		      const lastYearSales = Array(12).fill(0);
+		
+		      // 현재 연도 데이터 처리
+		      currentYearData.forEach(item => {
+		          const date = new Date(item.date);
+		          const month = date.getMonth(); // 0-11 범위
+		          currentYearSales[month] += item.sales; // 해당 월의 대여 수 누적
+		      });
+		
+		      // 작년 데이터 처리
+		      lastYearData.forEach(item => {
+		          const date = new Date(item.date);
+		          const month = date.getMonth(); // 0-11 범위
+		          lastYearSales[month] += item.sales; // 해당 월의 매출 누적
+		      });
+		
+		      // 월별 레이블 생성
+		      const monthLabels = Array.from({ length: 12 }, (_, i) => i + 1); // [1, 2, 3, ..., 12]
+		
+		      const ctxmonthsales = document.getElementById('MonthlySales').getContext('2d');
+		
+		      new Chart(ctxmonthsales, {
+		          type: 'bar',
+		          data: {
+		              labels: monthLabels, // 월별 레이블
+		              datasets: [
+		                  {
+		                      label: '작년 매출',
+		                      data: lastYearSales,
+		                      borderWidth: 1,
+		                      borderColor: '#FFC534',
+		                      backgroundColor: '#FFC53490'
+		                  },
+		                  {
+		                      label: '올해 매출',
+		                      data: currentYearSales,
+		                      borderWidth: 1,
+		                      borderColor: '#4dbf00',
+		                      backgroundColor: '#4dbf0090'
+		                  }
+		              ]
+		          },
+		          options: {
+		              scales: {
+		                  y: {
+		                      beginAtZero: true
+		                  }
+		              }
+		          },
+		          plugins: [legendMargin]
+		      });
+		  })
+		  .catch(error => console.error('Error fetching data:', error));
+		</script>
+				
+		<br><br>
+		<hr style="border-width:1.5px 0 0 0; border-style:dashed; border-color:#4dbf00;">
+		<br><br><br>
+		
+		<h2>월별 대여 현황</h2><br><br>
+		<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 350px;">
+		  <canvas id="MonthlyRent"></canvas>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+		  Promise.all([
+			  fetch('/master/MonthlyRentCurrentYear').then(response => response.json()),
+			  fetch('/master/MonthlyRentLastYear').then(response => response.json())
+		  ])
+	  	  .then(([currentYearData, lastYearData]) => {
+		      // 각 월의 대여 수를 저장할 배열 초기화
+		      const currentYearCounts = Array(12).fill(0);
+		      const lastYearCounts = Array(12).fill(0);
+		
+		      // 현재 연도 데이터 처리
+		      currentYearData.forEach(item => {
+		          const date = new Date(item.date);
+		          const month = date.getMonth(); // 0-11 범위
+		          currentYearCounts[month] += item.count; // 해당 월의 대여 수 누적
+		      });
+		
+		      // 작년 데이터 처리
+		      lastYearData.forEach(item => {
+		          const date = new Date(item.date);
+		          const month = date.getMonth(); // 0-11 범위
+		          lastYearCounts[month] += item.count; // 해당 월의 대여 수 누적
+		      });
+		
+		      // 월별 레이블 생성
+		      const monthLabels = Array.from({ length: 12 }, (_, i) => i + 1); // [1, 2, 3, ..., 12]
+		
+		      const ctxmonth = document.getElementById('MonthlyRent').getContext('2d');
+		
+		      new Chart(ctxmonth, {
+		          type: 'bar',
+		          data: {
+		              labels: monthLabels, // 월별 레이블
+		              datasets: [
+		                  {
+		                      label: '작년 대여 수',
+		                      data: lastYearCounts,
+		                      borderWidth: 1,
+		                      borderColor: '#FFC534',
+		                      backgroundColor: '#FFC53490'
+		                  },
+		                  {
+		                      label: '올해 대여 수',
+		                      data: currentYearCounts,
+		                      borderWidth: 1,
+		                      borderColor: '#4dbf00',
+		                      backgroundColor: '#4dbf0090'
+		                  }
+		              ]
+		          },
+		          options: {
+		              scales: {
+		                  y: {
+		                      beginAtZero: true
+		                  }
+		              }
+		          },
+		          plugins: [legendMargin]
+		      });
+		  })
+		  .catch(error => console.error('Error fetching data:', error));
+		</script>
+		
+		</div>
+	</div>
+	
+	<div class="content4">
+    <div class="content">
+        <h2>영화 개봉 기간별 대여 건수</h2><br>
+        <div class="canvas-container">
+            <canvas id="MonthlyRentByRD"></canvas>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+	        Promise.all([
+	            fetch('/master/MonthlyRentByReleaseDateCurrentYear').then(response => response.json()),
+	            fetch('/master/MonthlyRentByReleaseDateLastYear').then(response => response.json())
+	        ])
+	        .then(([currentYearData, lastYearData]) => {
+	            // Initialize arrays for each category
+	            const currentYearCounts_10000 = Array(12).fill(0);
+	            const currentYearCounts_6000 = Array(12).fill(0);
+	            const currentYearCounts_5000 = Array(12).fill(0);
+	            const currentYearCounts_4000 = Array(12).fill(0);
+	            const currentYearCounts_1000 = Array(12).fill(0);
+	
+	            const lastYearCounts_10000 = Array(12).fill(0);
+	            const lastYearCounts_6000 = Array(12).fill(0);
+	            const lastYearCounts_5000 = Array(12).fill(0);
+	            const lastYearCounts_4000 = Array(12).fill(0);
+	            const lastYearCounts_1000 = Array(12).fill(0);
+	
+	            // Process current year data
+	            currentYearData.forEach(item => {
+	                const date = new Date(item.date);
+	                const month = date.getMonth(); // 0-11 range
+	                currentYearCounts_10000[month] += item.count_10000;
+	                currentYearCounts_6000[month] += item.count_6000;
+	                currentYearCounts_5000[month] += item.count_5000;
+	                currentYearCounts_4000[month] += item.count_4000;
+	                currentYearCounts_1000[month] += item.count_1000;
+	            });
+	
+	            // Process last year data
+	            lastYearData.forEach(item => {
+	                const date = new Date(item.date);
+	                const month = date.getMonth(); // 0-11 range
+	                lastYearCounts_10000[month] += item.count_10000;
+	                lastYearCounts_6000[month] += item.count_6000;
+	                lastYearCounts_5000[month] += item.count_5000;
+	                lastYearCounts_4000[month] += item.count_4000;
+	                lastYearCounts_1000[month] += item.count_1000;
+	            });
+	
+	            // Create month labels
+	            const monthLabels = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
+	
+	            const ctxmonthbyrd = document.getElementById('MonthlyRentByRD').getContext('2d');
+	
+	            new Chart(ctxmonthbyrd, {
+	                type: 'bar',
+	                data: {
+	                    labels: monthLabels,
+	                    datasets: [
+	                    	// 작년 데이터
+	                        { label: '1개월 이내 (작년)', data: lastYearCounts_10000, backgroundColor: 'rgba(255, 99, 132, 0.8)', stack: 'lastYear' },
+	                        { label: '1-3개월 (작년)', data: lastYearCounts_6000, backgroundColor: 'rgba(54, 162, 235, 0.8)', stack: 'lastYear' },
+	                        { label: '3-6개월 (작년)', data: lastYearCounts_5000, backgroundColor: 'rgba(255, 206, 86, 0.8)', stack: 'lastYear' },
+	                        { label: '6개월-1년 (작년)', data: lastYearCounts_4000, backgroundColor: 'rgba(75, 192, 192, 0.8)', stack: 'lastYear' },
+	                        { label: '1년 이상 (작년)', data: lastYearCounts_1000, backgroundColor: 'rgba(153, 102, 255, 0.8)', stack: 'lastYear' },
+	                    	
+	                    	
+	                        // 올해 데이터
+	                        { label: '1개월 이내 (올해)', data: currentYearCounts_10000, backgroundColor: '#FF6384', stack: 'thisYear' },
+	                        { label: '1-3개월 (올해)', data: currentYearCounts_6000, backgroundColor: '#36A2EB', stack: 'thisYear' },
+	                        { label: '3-6개월 (올해)', data: currentYearCounts_5000, backgroundColor: '#FFCE56', stack: 'thisYear' },
+	                        { label: '6개월-1년 (올해)', data: currentYearCounts_4000, backgroundColor: '#4BC0C0', stack: 'thisYear' },
+	                        { label: '1년 이상 (올해)', data: currentYearCounts_1000, backgroundColor: '#9966FF', stack: 'thisYear' }
+	                    ]
+	                },
+	                options: {
+	                    responsive: true,
+	                    plugins: {
+	                        legend: {
+	                            display: true, // 범례는 표시
+	                            labels: {
+	                                color: '#000', // 범례 글자 색상 설정
+	                                boxWidth: 13,  // 범례 색상 박스 너비
+	                                padding: 15,
+
+	                                generateLabels: function (chart) {
+	                                    // 기본 범례 항목 생성
+	                                    const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+
+	                                    // '(올해)' 부분 제거
+	                                    return labels.map(label => {
+	                                        return {
+	                                            ...label,
+	                                            text: label.text.replace(' (올해)', '') // 범례 텍스트 수정
+	                                        };
+	                                    });
+	                                },
+	                                filter: function (legendItem, data) {
+	                                    // '작년' 텍스트가 포함되지 않은 데이터셋만 표시
+	                                    return !legendItem.text.includes('(작년)');
+	                                },
+	                                
+	                                
+	                            }
+	                        },
+	                        tooltip: {
+	                            enabled: true // 툴팁은 유지
+	                        }
+	                    },
+	                    scales: {
+	                        x: {
+	                            stacked: true,
+	                        },
+	                        y: {
+	                            stacked: true,
+	                            title: {
+	                                display: true,
+	                                text: '대여 건수'
+	                            }
+	                        }
+	                    } 
+	                },
+	                plugins: [legendMargin]
+	            });
+	        })
+	        .catch(error => console.error('Error fetching data:', error));
+	        
+	      
+        </script>
+    </div>
+	</div>
+		
+	<div class="content2">
+		<div class="content">
+			<h2>[[${currentYear}]] 영화 장르별 결제 현황 YTD</h2><br>
+			<div class="canvas-container">
+			  <canvas id="YTDSalesByGenre"></canvas>
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script>
+			  fetch('/master/YTDSalesByGenre')
+			    .then(response => response.json())
+			    .then(data => {
+			      const labels = data.map(item => item.genre);
+			      const sales = data.map(item => item.sales); 
+			
+			      const ctxYTDSalesByGenre = document.getElementById('YTDSalesByGenre');
+			      new Chart(ctxYTDSalesByGenre, {
+			        type: 'bar',
+			        data: {
+			          labels: labels,
+			          datasets: [{
+			            label: '장르',
+			            data: sales,
+			            borderWidth: 1,
+			            borderColor: '#FF6384',
+			            backgroundColor: '#FF638490'
+			          }]
+			        },
+			        options: {
+			          scales: {
+			            y: {
+			              beginAtZero: true,
+			              ticks: {
+			                stepSize: 10000
+			              }
+			            }
+			          },
+			          plugins: {
+	                        legend: {
+	                            display: false, // 범례 표시안함
+	                            labels: {
+	                            	color: '#000', // 범례 글자 색상 설정
+	                            	boxWidth: 13,  // 범례 색상 박스 너비
+	                            	padding: 15
+	                            }, 
+	                        },
+	                        tooltip: {
+	                            enabled: true // 툴팁은 유지
+	                        }
+	                    }
+			        },plugins: [legendMargin]
+			      });
+			    })
+			    .catch(error => console.error('Error fetching data:', error));
+			</script>
+			
+			
+		</div>
+	</div>
+	
+	
+	<div class="content1">
+		<div class="content">
+			<h2>이번달 회원 등급 현황</h2>
+			<div class="horicontentmem">
+				<div class="left-div">
+					<div style="display: flex; justify-content: center;">
+			  			<canvas id="gradeCounts" width = "212"></canvas>
+					</div>
+					<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+					<script>
+					  fetch('/master/gradeCounts')
+					  	.then(response => response.json())
+					  	.then(data => {
+					  	  const labels = data.map(item => item.grade);
+					  	  const counts = data.map(item => item.count);
+					  	  
+					  	  // 등급에 따라 색상 설정
+					      const backgroundColors = data.map(item => {
+					    	  switch (item.grade) {
+					    	    case 'BRONZE':
+					    	      return '#B69364';  // 청동색
+					    	    case 'SILVER':
+					    	      return '#D4D4D4';  // 은색
+					    	    case 'GOLD':
+					    	      return '#FFD700';  // 금색
+					    	    case 'PLATINUM':
+					    	      return '#C2DDEB';  // 백금색
+					    	    case 'DIAMOND':
+					    	      return '#ECCCF2';  // 다이아몬드색
+					    	  }
+					      });
+					  	  
+					  	  const ctxGradeCounts = document.getElementById('gradeCounts');
+			
+						  new Chart(ctxGradeCounts, {
+						    type: 'pie',
+						    data: {
+						      labels: labels,
+						      datasets: [{
+						        label: '등급',
+						        data: counts,
+						        hoverOffset: 4,
+						        backgroundColor: backgroundColors,
+						      }]
+						    },
+						    options: {
+				                responsive: false,
+				                  plugins: {
+				                    legend: {
+				                      position: 'left',  // 레전드 위치 (top, left, right, bottom)
+				                      labels: {
+				                        boxWidth: 10  // 레전드의 색상 박스 너비
+				                      }
+				                    }
+				                  }
+						    },
+						    plugins: [legendMarginhori]
+					  	  })
+					  	});
+					</script>
+				</div>
+				<div class="right-div">
+					<h4>다음 달 회원 변화</h4><br>
+					<p>· 승급 예정 : [[${upgradeCount}]]명</p>
+					<p>· 등급 유지 : [[${maintainCount}]]명</p>
+					<p>· 강등 예정 : [[${downgradeCount}]]명</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="content3">
+		<div class="content">
+			<div class="horicontentmem">
+				<div class="left-div">
+					<h2>회원 증감 수</h2><br>
+					<p>· 금일 가입 회원 수 : <span id="todaySignupCount"></span> 명 <span id="resultSignup"></span></p>
+					<p>· 전체 누적 회원 수 : <span id="totalMemberCount"></span> 명</p>
+				</div>
+				<div class="right-div">
+					<h2>방문 현황</h2><br>
+					<p>· 금일 방문자 수 : <span id="todayVisitorsCount"></span> 명 <span id="resultVisit"></span><br></p>
+					<p>· 전체 누적 방문자 수 : <span id="totalVisitorsCount"></span> 명</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<script>
+
+	//회원 구매 전환율 % 텍스트가 progress 색상이 너무 작아지면 (15% 미만이면) 텍스트는 오른쪽으로 나오게끔 하는 스크립트.
+	function adjustProgressText() {
+	    const progress = document.getElementById('progress');
+	    const progressText = progress.querySelector('.progress-text');
+	    if (!progress || !progressText) return;
+	
+	    // CSS에서 실제 너비 가져오기
+	    const progressWidth = parseFloat(getComputedStyle(progress).width);
+	    const progressBarWidth = parseFloat(getComputedStyle(progress.parentElement).width);
+	
+	    const progressPercentage = (progressWidth / progressBarWidth) * 100;
+	
+	    if (progressPercentage < 15) {
+	        progressText.style.color = '#000';
+	        progressText.style.position = 'absolute';
+	        progressText.style.left = 'calc(100% + 10px)';
+	        progressText.style.top = '50%';
+	        progressText.style.transform = 'translateY(-50%)';
+	    } else {
+	        progressText.style.color = '#fff';
+	        progressText.style.position = 'relative';
+	        progressText.style.left = '0';
+	        progressText.style.transform = 'none';
+	    }
+	}
+	
+	document.addEventListener('DOMContentLoaded', () => {
+	    adjustProgressText();
+	    window.addEventListener('resize', adjustProgressText);
+	});
+	
+
+
+	//회원 구매 전환율 % 구하기
+	const updateProgressBar = async() => {
+	    await fetch('/master/conversionRate', { 
+	        method: 'GET',
+	        headers: { "content-type": "application/json" }
+	    })
+	    .then((response) => response.json())
+	    .then((data) => {
+	        // conversionRate 값을 사용하여 progress 바 업데이트
+	        const conversionRate = data.conversionRate; // 서버에서 받은 데이터 구조에 맞게 수정
+	        const progressElement = document.getElementById('progress');
+	       
+	        // width와 텍스트 업데이트
+            progressElement.style.width = conversionRate + '%';
+            progressElement.querySelector('.progress-text').textContent = conversionRate + '%';
+
+            // adjustProgressText 호출 시점 수정
+            adjustProgressText();
+	    })
+	    .catch((error) => {
+	        console.error('============= Error :', error);
+	    });
+	}
+	updateProgressBar(); // 페이지 로드 시 프로그레스 바 업데이트
+
+	
+	
+	//회원 가입 수 증감 색상 표시
+	const signupResult = async() => {
+		await fetch('/master/signupResult', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+			  const yesterdaySignup = data.yesterdaySignup;
+			  const todaySignup = data.todaySignup;
+			  const totalMember = data.totalMember;
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('todaySignupCount').textContent = todaySignup;
+		      document.getElementById('totalMemberCount').textContent = totalMember;
+			  
+			  const differenceSignup = data.todaySignup - data.yesterdaySignup;
+			  const resultDivSignup = document.getElementById('resultSignup');
+				
+				if (differenceSignup > 0) {
+				    resultDivSignup.innerHTML = `<span class="positive">▲ +${differenceSignup}</span>`;
+				} else if (differenceSignup < 0) {
+				    resultDivSignup.innerHTML = `<span class="negative">▼ ${differenceSignup}</span>`;
+				} else {
+				    resultDivSignup.innerHTML = `<span class="nochange"> → 변동 없음</span>`;
+				}
+	  
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	signupResult();
+	
+	
+	//방문자 수 증감 색상 표시
+	const visitResult = async() => {
+		await fetch('/master/visitResult', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+			  const yesterdayVisitors = data.yesterdayVisitors;
+			  const todayVisitors = data.todayVisitors;
+			  const totalVisitors = data.totalVisitors;
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('todayVisitorsCount').textContent = todayVisitors;
+		      document.getElementById('totalVisitorsCount').textContent = totalVisitors;
+			  
+		      const differenceVisitors = todayVisitors - yesterdayVisitors;
+			  const resultDivSignup = document.getElementById('resultVisit');
+				
+			  if (differenceVisitors > 0) {
+				    resultDivSignup.innerHTML = `<span class="positive">▲ +${differenceVisitors}</span>`;
+				} else if (differenceVisitors < 0) {
+				    resultDivSignup.innerHTML = `<span class="negative">▼ ${differenceVisitors}</span>`;
+				} else {
+				    resultDivSignup.innerHTML = `<span class="nochange"> → 변동 없음</span>`;
+				}
+
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	visitResult();
+	
+	//회원 요청 사항 처리 상태 현황 표시
+	const requestStatus = async() => {
+		await fetch('/master/requestStatus', {
+			method: 'GET',
+			headers: { "content-type": "application/json" }
+		}).then((response)=> response.json())
+		  .then((data)=> {
+
+			  let pendingCount = 0;
+			  let completedCount = 0;
+			  
+			  
+			  // 객체에서 status와 count를 가져와서 처리
+	          Object.entries(data).forEach(([status, count]) => {
+	            if (status === 'PENDING') {
+	                pendingCount = count;  // PENDING 상태의 수 설정
+	            } else if (status === 'COMPLETED') {
+	                completedCount = count;  // COMPLETED 상태의 수 설정
+	            }
+	          });
+			  
+			  // HTML 요소에 값 설정
+		      document.getElementById('pendingCount').textContent = pendingCount;
+		      document.getElementById('completedCount').textContent = completedCount;
+
+		  }).catch((error) => {
+		        console.error('============= Error :', error);
+		  });
+	}
+	requestStatus();
+	
+	
+	//Chart.js 에서 legend 와 chart 사이의 마진
+	const legendMargin = {
+    	    id: 'legendMargin',
+    	    beforeInit(chart) {
+    	        const originalFit = chart.legend.fit;
+    	        chart.legend.fit = function fit() {
+    	            originalFit.bind(chart.legend)();
+    	            this.height += 15; // Adjust this value to increase/decrease space
+    	        };
+    	    }
+    	};
+	
+
+	//Chart.js 에서 legend 와 chart 사이의 마진 (legend 와 chart 가 수평으로 배치되어 있을 때)
+	const legendMarginhori = {
+    	    id: 'legendMarginhori',
+    	    beforeInit(chart) {
+    	        const originalFit = chart.legend.fit;
+    	        chart.legend.fit = function fit() {
+    	            originalFit.bind(chart.legend)();
+    	            this.width += 15; // Adjust this value to increase/decrease space
+    	        };
+    	    }
+    	};
+</script>
+
+</body>
+</html>

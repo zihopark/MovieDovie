@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>포인트 적립 내역</title>
+  <div th:replace="~{fragments/header}"></div>
+</head>
+<style>
+body {
+  background-color: #141414;
+  color: black;
+  font-family: 'Roboto', sans-serif;
+}
+
+.mileage-container {
+  text-align: center;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  font-weight: bold;
+  min-height: 550px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.mileage-list {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mileage-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mileage-item:last-child {
+  border-bottom: none;
+}
+
+.mileage-date {
+  flex: 0 0 200px;
+  font-size: 14px;
+}
+
+.mileage-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mileage-title {
+  font-size: 16px;
+  font-weight: 500;
+  font-weight:bold;
+}
+
+.mileage-amount {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.green-bg {
+  background-color: #87CEEB;
+}
+
+.red-bg {
+  background-color: #F08080;
+} 
+</style>
+<body>
+  <div th:replace="~{fragments/nav/menubar}"></div>
+<div class="mileage-container">
+  <br>
+  <h2 class="title">포인트 적립/사용 내역</h2>
+  <h4 style="color: white">[ 잔여 포인트 : [[${point}]] P ]</h4> <br><br>
+  <div class="mileage-list">
+    <div th:if="${not #lists.isEmpty(mileageLogs)}">
+      <div class="mileage-item" th:each="mileageLog : ${mileageLogs}"
+      th:classappend="${mileageLog.paymentType == 'cash'} ? 'green-bg' :'red-bg'">
+        <div class="mileage-date" th:text="${#temporals.format(mileageLog.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
+        <div class="mileage-info">
+          <span class="mileage-title" th:text="${mileageLog.title}"></span>
+          <span class="mileage-amount" th:text="${mileageLog.paymentType == 'cash' ? '+' : '-'} + ${mileageLog.amount} + 'P'"></span>
+        </div>
+      </div>
+    </div>
+    <div th:unless="${not #lists.isEmpty(mileageLogs)}" class="no-mileage-message">
+      적립 내역이 없습니다.
+    </div>
+  </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

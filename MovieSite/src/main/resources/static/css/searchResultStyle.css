@@ -1,0 +1,210 @@
+body {
+    background-color: #151515;
+    font-family: Arial, sans-serif;
+}
+
+.search-container {
+    margin: auto 7%;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.movie-card-wrapper {
+    flex: 0 0 auto;
+    width: 230px; 
+}
+
+.movie-groups {
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-card {
+    position: relative; /* 내부 요소의 위치를 제어하기 위해 필요 */
+    overflow: hidden; /* 이미지 확대 시 외부로 삐져나오지 않도록 설정 */
+    border-radius: 8px;
+    cursor: pointer;
+    height: 370px;
+    width: 230px;
+    /* transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: #151515;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e70caca1;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    height: 370px;
+    width: 100%; */
+}
+
+.movie-card img:hover {
+    transform: scale(1.1); /* 확대 효과 */
+    filter: brightness(70%); /* 어두워짐 효과 */
+    /*
+    transform: scale(1.05); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    border: 2px solid #4dbf00;
+    background-color: #f0f0f0; 색상 변화 효과
+    */
+}
+
+.movie-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+/* 영화 정보 레이어 */
+.movie-info-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* 반투명한 검정 배경 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.movie-card:hover .movie-info-layer {
+    opacity: 1; /* 마우스를 올리면 정보 레이어가 보이도록 설정 */
+}
+
+.movie-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.movie-details {
+    font-size: 14px;
+    line-height: 1.6;
+}
+/* 영화 등급 */
+.movie-certification {
+    display: inline-block;
+    background-color: #e70caca1; /* 배경색 (적색 계열) */
+    color: white; /* 텍스트 색상 */
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px; /* 패딩 */
+    border-radius: 5px; /* 둥근 테두리 */
+    margin-bottom: 10px; /* 아래 여백 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    text-transform: uppercase; /* 텍스트 대문자로 변환 */
+    letter-spacing: 0.5px; /* 글자 간격 */
+}
+
+/* 영화 정보 레이어--- */
+
+
+.movie-card:hover::before {
+    opacity: 1;
+}
+
+.movie-card .movie-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .movie-info {
+    opacity: 1;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+    /* border-radius: 8px;
+    width: ;
+    height: 300px;
+    object-fit: fill; */
+}
+
+.movie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px;
+}
+
+.truncate {
+    text-align: center;
+    width: 200px;          /* 텍스트가 표시될 최대 너비 */
+    white-space: nowrap;   /* 텍스트를 한 줄로 표시 */
+    overflow: hidden;      /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 잘린 부분에 '...' 표시 */
+}
+
+.searchResult {
+    margin: 60px;
+}
+
+/* #loadMoreBtn  */
+#loadMoreBtn {
+    background-color: #4CAF50; /* 녹색 배경 */
+    color: white; /* 흰색 텍스트 */
+    border: none; /* 테두리 제거 */
+    padding: 15px 32px; /* 상하 15px, 좌우 32px 패딩 */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 그림자 효과 */
+    font-weight: bold; /* 굵은 글씨 */
+    text-transform: uppercase; /* 대문자로 변환 */
+    letter-spacing: 1px; /* 글자 간격 */
+}
+
+#loadMoreBtn:hover {
+    background-color: #45a049; /* 호버 시 더 어두운 녹색 */
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15); /* 호버 시 더 강한 그림자 */
+    transform: translateY(-2px); /* 호버 시 살짝 위로 이동 */
+}
+
+#loadMoreBtn:active {
+    background-color: #3e8e41; /* 클릭 시 더 어두운 색상 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 클릭 시 그림자 감소 */
+    transform: translateY(0); /* 원래 위치로 복귀 */
+}
+
+#loadMoreBtn:focus {
+    outline: none; /* 포커스 시 기본 아웃라인 제거 */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5); /* 포커스 시 글로우 효과 */
+}
+
+/* 버튼이 비활성화될 때의 스타일 */
+#loadMoreBtn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    box-shadow: none;
+}

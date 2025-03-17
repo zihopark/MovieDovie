@@ -1,0 +1,546 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/movieListStyle.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>요청사항 상세보기</title>
+    <style>
+    
+	.field {
+	  width: 87%;
+	  height:25px;
+	  outline:none;
+	  color: #636e72;
+	  font-size:16px;
+	  background: none;
+	  border-bottom: 1.8px solid #adadad;
+	  margin: 40px;
+	  padding: 5px 5px;
+	}
+	
+	.content {
+	  width: 87%;
+	  height: 170px;
+	  overflow: auto;
+	  margin: 40px;
+	  padding: 10px;
+	  box-sizing: border-box;
+	  border: solid #adadad 2px;
+	  text-align: left;
+	  font-size: 16px;
+	  resize: both;
+	}
+	
+	.boardView {
+	  width:60%;
+	  height:auto;
+	  margin:auto;
+	  text-align: left;
+	  padding: 50px;
+	  background-color:white;
+	  border: 2px solid #D8D8D8;
+	  border-radius: 20px;
+	}
+	
+	.main {
+	  text-align: center;
+	}
+	
+	.form-group {
+	  display: flex;
+	  align-items: center;
+	  margin: 12px 0;
+	}
+	
+	.form-group label {
+	  width: 20%;  /* 라벨의 너비 설정 */
+	  font-size: 15px;
+	  margin-right: 1px;  /* 라벨과 input 필드 사이의 간격 */
+	  text-align: left;  /* 라벨 텍스트 우측 정렬 */
+	}
+
+	.status {
+		padding: 10px 10px;
+		text-align: center;
+		text-decoration: none;
+		color: white;
+		display: inline-block;
+		background-color: #ACACAC;
+		border-radius: 50px;
+	}
+	
+	.statusBox {
+	    display: flex;
+	    justify-content: center; /* 수평 가운데 */
+	    align-items: center; /* 수직 가운데 */
+	}
+	.status.pending {
+	    background-color: white;
+	    font-size: 1px;
+	}
+	
+	.status.completed {
+	    background-color: #4dbf00;
+	}
+	
+	.button {
+	    display: inline-block;
+	    padding: 10px 15px;
+	    margin: 5px;
+	   	font-size: 14px;
+	    background-color: #4dbf00; /* 버튼 배경색 */
+	    color: white; /* 글자색 */
+	    text-align: center;
+	    text-decoration: none;
+	    border-radius: 10px; /* 모서리 둥글게 */
+	    transition: background-color 0.3s;
+	}
+	
+	.button:hover {
+	    background-colorr: white;
+	    color: black;
+	}
+	
+	/* 댓글 창 */
+	.replyView {
+	    width: 60%;
+	    margin: 0 auto; /* 가운데 정렬 */
+	    padding: 20px; /* 패딩을 고르게 적용 */
+	    background-color: #F7F7F7;
+	    border: 2px solid #D8D8D8;
+	    border-radius: 20px;
+	    box-sizing: border-box; /* 패딩을 포함한 너비로 계산 */
+	    display: flex;
+	    flex-direction: column;
+	    max-height: 500px; /* 최대 높이를 설정하여 overflow가 작동하도록 */
+	    overflow: auto; /* 콘텐츠가 넘치면 스크롤바 표시 */
+	    padding-right: 20px; /* 스크롤바와 border 사이에 여백 추가 */
+	}
+	
+	.replyView::-webkit-scrollbar {
+	    width: 8px; /* 스크롤바의 너비 설정 */
+	}
+	
+	.replyView::-webkit-scrollbar-thumb {
+	    background-color: #888; /* 스크롤바의 thumb 색 */
+	    border-radius: 10px; /* 둥근 모서리 */
+	}
+	
+	.replyView::-webkit-scrollbar-thumb:hover {
+	    background-color: #555; /* hover 시 색상 */
+	}
+	
+	/* 댓글 전체 리스트 */
+	#replyList {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 10px;
+	    width: 100%;
+	    padding: 0;
+	}
+	
+	/* 댓글 wrapper */
+	.reply-wrapper {
+	    display: flex;
+	    justify-content: flex-start;
+	    align-items: flex-start;
+	}
+	
+	/* 내가 작성한 댓글 */
+	.reply-wrapper.my-comment {
+	    justify-content: flex-end; /* 오른쪽 정렬 */
+	}
+	
+	/* 남이 작성한 댓글 */
+	.reply-wrapper.other-comment {
+	    justify-content: flex-start; /* 왼쪽 정렬 */
+	}
+	
+	/* 말풍선 스타일 */
+	.balloon {
+	    position: relative;
+	    padding: 12px;
+	    background-color: #333333; 
+	    color: white;
+	    border-radius: 15px;
+	    max-width: 60%;
+	    word-wrap: break-word;
+	    text-align: left;
+	    margin-bottom: 6px;
+	    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* 말풍선에 그림자 추가 */
+	}
+	
+	/* 남이 작성한 댓글은 흰색 말풍선 */
+	.reply-wrapper.other-comment .balloon {
+	    background-color: white; /* 흰색 배경 */
+	    color: black;
+	    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	}
+	
+	/* 말풍선 꼬리 (내가 작성한 댓글) */
+	.reply-wrapper.my-comment .balloon::after {
+	    content: '';
+	    position: absolute;
+	    bottom: 0;
+	    right: -8px;
+	    border-width: 10px;
+	    border-style: solid;
+	    border-color: #333333 transparent transparent transparent;
+	    
+	}
+	
+	/* 말풍선 꼬리 (남이 작성한 댓글) */
+	.reply-wrapper.other-comment .balloon::after {
+	    content: '';
+	    position: absolute;
+	    bottom: 0;
+	    left: -8px;
+	    border-width: 10px;
+	    border-style: solid;
+	    border-color: white transparent transparent transparent; /* 흰색 */
+	}
+	
+	/* 댓글 작성자 정보 */
+	.reply-wrapper .balloon strong {
+	    font-weight: bold;
+	}
+	
+	/* 댓글 내용 */
+	.reply-content {
+	    font-size: 0.8rem;
+	    color: #B3B3B3;
+	    text-align: left;
+	    margin-top: 5px;
+	}
+	
+	/* 버튼 스타일 */
+	.reply-wrapper .balloon button {
+	    background-color: #FFD700;
+	    color: black;
+	    border: none;
+	    border-radius: 5px;
+	    padding: 5px 10px;
+	    font-size: 0.8rem;
+	    cursor: pointer;
+	    margin-left: 2px;
+	    margin-top: 10px;
+	}
+	
+	.reply-wrapper .balloon button:hover {
+	    background-color: #4dbf00;
+	    color: white;
+	}
+	
+	/* 수정 가능하도록 스타일 */
+	.editable-content {
+	    cursor: text;  /* 커서가 텍스트 입력 가능한 상태로 변경 */
+	}
+	
+	.editable-content:focus {
+		background-color: #F7F7F7;
+	    border: 2px solid #D8D8D8;
+	    border-radius: 10px;
+	    padding: 10px;
+	    min-height: 30px;
+	    max-width: 100%;
+	    word-wrap: break-word;
+	    color: black;
+	    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+	}
+	
+	/* 댓글 등록 폼 */
+	.replyRegister {
+	    display: flex; /* 수평으로 배치 */
+	    align-items: center; /* 세로 중앙 정렬 */
+	    gap: 10px; /* 댓글 입력창과 버튼 사이의 간격 */
+	    margin-top: 20px; /* 위쪽 간격 */
+	}
+	
+	/* 댓글 입력창 */
+	#replyContent {
+	    width: 90%; /* 입력창 크기 조정 */
+	    height: 40px;
+	    padding: 10px;
+	    font-size: 1rem;
+	    border-radius: 15px;
+	    border: 2px solid #D8D8D8;
+	    background-color: #F9F9F9;
+	    color: #333;
+	    resize: none; /* 크기 조정 방지 */
+	    outline: none;
+	    transition: all 0.3s ease;
+	    margin-right: 10px; /* 버튼과의 간격 */
+	}
+	
+	/* 댓글 입력창 포커스 스타일 */
+	#replyContent:focus {
+	    background-color: white;
+	}
+	
+	/* 댓글 등록 버튼 */
+	#registerReplyBtn {
+	    background-color: #FFD700;
+	    color: black;
+	    border: none;
+	    border-radius: 15px;
+	    padding: 10px 20px;
+	    font-size: 0.9rem; /* 버튼 크기를 작게 */
+	    cursor: pointer;
+	    transition: background-color 0.3s ease, transform 0.2s ease;
+	    width: auto; /* 버튼 크기 고정 */
+	    height: 50px; /* 버튼 높이 설정 */
+	}
+	
+	/* 버튼 호버 효과 */
+	#registerReplyBtn:hover {
+	    background-color: #4dbf00;
+	    color: white;
+	    transform: scale(1.05);
+	}
+	
+	/* 버튼 클릭 효과 */
+	#registerReplyBtn:active {
+	    background-color: #4dbf00;
+	    color: white;
+	    transform: scale(1);
+	}
+	
+    </style>
+    
+    <script>
+    let status = '[[${status}]]';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let status = '[[${status}]]';
+
+        const statusElement = document.querySelector('.status');
+        const statusText = document.getElementById('statusText');
+
+        // status 값에 따라 클래스를 동적으로 추가
+        if(status === "PENDING") {
+            statusElement.classList.add('pending');
+            statusElement.classList.remove('completed');
+            statusText.innerHTML = '처리 중';
+            statusText.style.color = '#ACACAC';
+        }
+        else if(status === "COMPLETED") {
+            statusElement.classList.add('completed');
+            statusElement.classList.remove('pending');
+            statusText.innerHTML = '처리 완료';
+            statusText.style.color = '#4dbf00';
+        }
+    });
+    
+  	//게시물 작성
+	const boardWrite = () => {
+    	document.location.href='/board/requestWrite';
+	}
+   
+   	//게시물 삭제
+   	const boardDelete = () => {
+       if(confirm("정말 삭제 하시겠습니까?")==true) 
+       	document.location.href='/board/requestDelete?seqno=[[${view.seqno}]]';
+   	}
+    </script>
+</head>
+<body style = "background-color:black;">
+    <div th:replace="~{fragments/nav/menubar}"></div>
+    <div class="main" >
+        <br><br><br><br><br>
+        <h2 style="text-align: center; color: white;">요청사항 상세보기</h2>
+        <br><br>
+
+        <div class="boardView">
+        
+       	 	<div class="field">글쓴이 : [[${nickname}]]</div>
+            <div class="field">제목 : [[${view.title}]]</div>
+            <div class="field">날짜 : [[${#temporals.format(view.reqdate,'yyyy-MM-dd HH:mm:ss')}]]</div>
+            <div class="content"><pre th:text="${view.content}"></pre></div>
+		
+			<br>
+			<!-- 상태 박스 -->
+		    <div class="statusBox">
+			    <b><span id="statusText" style="text-align:center;"></span></b>
+			</div>
+			<div class="statusBox">
+			    <span id="status" class="status"><b>&nbsp;√&nbsp;</b></span>
+			</div>
+        </div>
+		 <br>
+        <div id="bottom_menu">
+		    <th:block th:if="${pre_seqno != 0}">
+		        <a th:href="@{'/board/requestView?seqno=' + ${pre_seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}" class="button">이전 ▼</a>
+		    </th:block>
+		    <a th:href="@{'/board/requestList?page=' + ${page} + '&keyword=' + ${keyword}}" class="button">목록가기</a>
+		    <th:block th:if="${next_seqno != 0}">    
+		        <a th:href="@{'/board/requestView?seqno=' + ${next_seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}" class="button">다음 ▲</a>
+		    </th:block>
+		    <th:block th:if="${view.email == email}">
+		    	<a href="javascript:boardDelete()" class="button">글 삭제</a>
+		    </th:block>
+		    <a href="javascript:boardWrite()" class="button">글 작성</a>
+		</div>
+        <br>
+        
+        <div class="replyView" style="overflow: auto;">
+			<!-- 댓글 목록 -->
+			<div id="replyListContainer">
+			    <h3>[ 댓글 목록 ]</h3><br>
+			    참고로 댓글은 수정 및 삭제가 불가능합니다. 댓글 작성 시 참고하시길 바랍니다.<br><br>
+			    <div id="replyList"></div>
+			</div>
+			<th:block th:if="${status == 'PENDING'}">
+				<!-- 댓글 등록 폼 -->
+				<div class="replyRegister">
+				    <textarea id="replyContent" maxlength="500" placeholder="500자 이내로 댓글을 작성해주세요"></textarea>
+				    <button id="registerReplyBtn">등록</button>
+				</div>
+			</th:block>
+		</div>
+		
+		<script>
+		    // 페이지 로드 시 댓글 목록 가져오기
+		    document.addEventListener("DOMContentLoaded", function() {
+		        loadReplies();
+		        
+		    });
+		
+		 	// 로그인한 사용자의 이메일
+		    const loggedInUser = '[[${email}]]'; 
+		    
+		    
+		    // 댓글 목록을 불러오는 함수
+		    function loadReplies() {
+		        
+		        fetch('/master/requestReply?kind=L', {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json' },
+		            body: JSON.stringify({
+		                reqseqno: Number('[[${view.seqno}]]') // 게시글 seqno 
+		            })
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            displayReplies(data);
+		        })
+		        .catch(error => {
+		            console.error('댓글 목록 로딩 실패:', error);
+		        });
+		    }
+		
+		    // 댓글 목록을 화면에 표시하는 함수
+		    function displayReplies(replies) {
+		        const replyListContainer = document.getElementById('replyList');
+		        replyListContainer.innerHTML = ''; // 기존 내용을 비웁니다.
+		
+		        // 댓글이 없을 때 메세지 표시
+		        if (replies.length === 0) {
+		            const noRepliesMessage = document.createElement('p');
+		            noRepliesMessage.innerHTML = '<br>아직 작성된 댓글이 없습니다.';
+		            noRepliesMessage.style.textAlign = 'center';  // 가운데 정렬
+		            noRepliesMessage.style.color = '#888'; // 색상 설정 (예: 회색)
+		            replyListContainer.appendChild(noRepliesMessage);
+		            return;
+		        }
+		        
+		        // 댓글 목록을 반복하면서 표시
+		        replies.forEach(function(reply) {
+		            const replyElement = document.createElement('div');
+		            replyElement.classList.add('reply');
+		            
+		            // ISO 8601 형식의 날짜를 JavaScript에서 포맷하기
+		            const formattedDate = formatDate(reply.replyregdate);
+		            
+
+		            // 내가 작성한 댓글인지 확인
+		            const isMyComment = reply.email === loggedInUser;
+
+		        	// 댓글 HTML 구조
+		            replyElement.innerHTML = `
+		                <div class="reply-wrapper ${isMyComment ? 'my-comment' : 'other-comment'}">
+		                    <div class="balloon">
+		                        <p><strong>${reply.replywriter}</strong>: ${reply.replycontent}</p>
+		                        <div class="reply-content">작성일: ${formattedDate}</div>
+		                        
+		                    </div>
+		                </div>
+		            `;
+		            replyListContainer.appendChild(replyElement);
+		        });
+		     }
+
+			 // 날짜를 'yyyy-MM-dd HH:mm:ss' 형식으로 포맷하는 함수
+			 function formatDate(dateStr) {
+			     const date = new Date(dateStr);
+	
+			     const year = date.getFullYear();
+			     const month = String(date.getMonth() + 1).padStart(2, '0');
+			     const day = String(date.getDate()).padStart(2, '0');
+			     const hours = String(date.getHours()).padStart(2, '0');
+			     const minutes = String(date.getMinutes()).padStart(2, '0');
+			     const seconds = String(date.getSeconds()).padStart(2, '0');
+	
+			     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+			 }
+		
+			 
+		    // 댓글 등록 함수
+		    document.getElementById('registerReplyBtn').addEventListener('click', function() {
+		        const content = document.getElementById('replyContent').value;
+		        const maxLength = 500;
+		        
+		        
+		        if (!content) {
+		            alert("댓글 내용을 입력하세요.");
+		            return;
+		        }
+		
+		        if (content.length > maxLength) {
+		            alert('댓글은 500자를 초과할 수 없습니다.');
+		            return;
+		        }
+		        
+		        fetch('/master/requestReply?kind=I', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify({
+		                reqseqno: Number('[[${view.seqno}]]'), // 게시글 seqno 
+		                replywriter: '[[${nickname}]]',
+		                replycontent: content,
+		                email: '[[${email}]]'
+		            })
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            loadReplies(); //댓글 목록 새로 고침
+		            document.getElementById('replyContent').value = ''; //텍스트박스 초기화
+		        })
+		        .catch(error => {
+		            console.error('댓글 등록 실패:', error);
+		        });
+		    });
+		
+		 	
+		</script>
+
+      <br><br>        
+    </div>
+
+    <script src="/js/app.js"></script>
+
+    <div th:replace="~{fragments/footer}"></div>
+</body>
+
+</html>

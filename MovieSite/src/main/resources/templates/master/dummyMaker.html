@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>더미 데이터 만들기</title>
+<style>
+.button {
+    padding: 10px 15px;
+    margin: 5px;
+   	font-size: 15px;
+    background-color: tomato; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 20px; /* 모서리 둥글게 */
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: black; /* 마우스 오버 시 색상 변경 */
+}
+
+</style>
+<script>
+const memberMaker = async () => {
+    let result = document.querySelector('#memberResult');
+    await fetch('/master/createDummyMembers', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const rentMaker = async () => {
+    let result = document.querySelector('#rentResult');
+    await fetch('/master/createDummyRents', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const likeMaker = async () => {
+    let result = document.querySelector('#likeResult');
+    await fetch('/master/createDummyLikes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const logMaker = async () => {
+    let result = document.querySelector('#logResult');
+    await fetch('/master/createDummyLogs', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const watchMaker = async () => {
+    let result = document.querySelector('#watchResult');
+    await fetch('/master/createDummyWatch', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const bookmarkMaker = async () => {
+    let result = document.querySelector('#bookmarkResult');
+    await fetch('/master/createDummyBookmarks', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+
+const favGenreMaker = async () => {
+    let result = document.querySelector('#favGenreResult');
+    await fetch('/master/createDummyFavGenre', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    }).then(response => {
+        return response.text(); // 메시지로 반환
+    }).then(data => {
+    	result.textContent = data; 
+    }).catch(error => console.error("Error:", error));
+}
+</script>
+
+</head>
+<body>
+
+<h2>[더미 데이터 생성 버튼]</h2>
+원하는 버튼을 클릭하세요! 더미 데이터가 생성됩니다 :)<br><br><br>
+
+<input type="button" value="더미 회원 생성" class="button" onclick="memberMaker()"> &nbsp;<span id="memberResult"></span><br><br>
+<input type="button" value="더미 대여현황 생성" class="button" onclick="rentMaker()"> &nbsp;<span id="rentResult"></span><br><br>
+<input type="button" value="더미 좋아요/싫어요 생성" class="button" onclick="likeMaker()"> &nbsp;<span id="likeResult"></span><br><br>
+<input type="button" value="더미 로그 생성" class="button" onclick="logMaker()"> &nbsp;<span id="logResult"></span><br><br>
+<input type="button" value="더미 시청여부 생성" class="button" onclick="watchMaker()"> &nbsp;<span id="watchResult"></span><br><br>
+<input type="button" value="더미 즐겨찾기 생성" class="button" onclick="bookmarkMaker()"> &nbsp;<span id="bookmarkResult"></span><br><br>
+<input type="button" value="더미 좋아하는 장르 생성" class="button" onclick="favGenreMaker()"> &nbsp;<span id="favGenreResult"></span><br><br>
+
+
+</body>
+</html>

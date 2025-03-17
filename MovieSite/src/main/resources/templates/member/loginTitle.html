@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless/borderless.css">
+
+<title>로그인</title>
+<style>
+    /* 전체 배경 설정 */
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #141414; /* 다크 테마 배경 */
+        color: #ffffff; /* 흰색 텍스트 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    /* 로그인 창 타이틀 */
+    #expandable-text {
+        font-family: Arial, sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .letter {
+        display: inline-block;
+        margin-left: 10px;
+        transition: all 1s ease;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+
+
+<body>
+<!-- 로그인 창 타이틀 -->
+<span style="color:red;">MOVIE</span>
+<div id="expandable-text">
+        <span class="letter">D</span>
+        <span class="letter">O</span>
+        <span class="letter">V</span>
+        <span class="letter">I</span>
+        <span class="letter">E</span>
+    </a>   
+</div>
+<script defer>
+  // 로그인 창 타이틀
+  const shortText = 'DOVIE';
+  const longText = ['Digital', 'Online', 'Vault of', 'Immersive', 'Entertainment'];
+  const element = document.getElementById('expandable-text');
+  const main = document.getElementById('main');
+  
+  function expand() {
+    document.querySelectorAll('.letter').forEach((span, index) => {
+      if (index == 4)
+        span.style.marginLeft = '0px';
+      else
+        span.style.marginLeft = '10px';
+  
+      span.dataset.long = longText[index] || '';
+      span.style.width = span.dataset.long.length + 'ch';
+      span.textContent = span.dataset.long || span.textContent;
+    });
+  }
+  
+  function shrink() {
+    document.querySelectorAll('.letter').forEach((span, index) => {
+      span.style.width = '1ch';
+      span.style.marginLeft = '0px';
+      span.textContent = shortText[index];
+    });
+  }
+  
+  element.addEventListener('mouseenter', expand);
+  element.addEventListener('mouseleave', shrink);
+  
+  
+  </script>
+</html>

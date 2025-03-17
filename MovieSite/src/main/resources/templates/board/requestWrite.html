@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<style>
+	@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+	</style>
+	<script src="/js/app.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/movieListStyle.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>요청사항 작성</title>
+    <style>
+    .input_field {
+	  width: 85%;
+	  border:none;
+	  border-bottom: 2px solid #adadad;
+	  margin: 15px;
+	  padding: 15px;
+	  outline:none;
+	  color: #636e72;
+	  font-size:15px;
+	  height:25px;
+	  background: none;
+	  box-sizing: border-box;
+	}
+	
+	.input_content{
+	  width: 85%;
+	  height: 200px;
+	  margin: 15px;
+	  padding: 15px;
+	  box-sizing: border-box;
+	  border: 2px solid #adadad;
+	  font-size: 15px;
+	  resize: both;
+	}
+	
+	.boardView {
+	  width:60%;
+	  height:auto;
+	  margin:auto;
+	  text-align: center;
+	  padding: 60px;
+	  background-color:white;
+	  border: 2px solid #D8D8D8;
+	  border-radius: 20px;
+	}
+	
+	.main {
+	  text-align: center;
+	}
+	
+	.form-group {
+	  display: flex;
+	  align-items: center;
+	  margin: 10px 0;
+	}
+	
+	.form-group label {
+	  width: 10%;  /* 라벨의 너비 설정 */
+	  font-size: 16px;
+	  margin-right: 1px;  /* 라벨과 input 필드 사이의 간격 */
+	  text-align: left;  /* 라벨 텍스트 우측 정렬 */
+	}
+
+	.button {
+	    display: inline-block;
+	    padding: 10px 15px;
+	    margin: 5px;
+	   	font-size: 16px;
+	    background-color: #4dbf00; /* 버튼 배경색 */
+	    color: white; /* 글자색 */
+	    text-align: center;
+	    text-decoration: none;
+	    border: none;
+	    border-radius: 10px; /* 모서리 둥글게 */
+	    transition: background-color 0.2s;
+	}
+	
+	.button:hover {
+	    background-color:black;
+	}
+	
+	textarea::placeholder {
+	    white-space: pre-wrap; /* 줄바꿈 처리 */
+	    word-wrap: break-word; /* 긴 단어가 줄을 넘지 않도록 처리 */
+	}
+	
+	textarea {
+	  height: 100px;
+	  line-height: 1.5;
+	}
+	
+	
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/nav/menubar}"></div>
+    
+    <div class="main" style="background-color:black;">
+        <br><br><br><br><br>
+        <h2 style="text-align: center; color: white;">관리자에게 요청하기</h2><br><br>
+        <div class="boardView">
+	       	 	<div class="form-group">
+		            <label for="writer">글쓴이:</label>
+		            <input type="text" class="input_field" id="writer" name="writer" th:value="${nickname}" readonly>
+		        </div>
+		        <div class="form-group">
+		            <label for="title">제목:</label>
+		            <input type="text" class="input_field" id="title" name="title" placeholder="제목">
+		        </div>
+		        <div class="form-group">
+		            <label for="content">내용:</label>
+		            <textarea class="input_content" id="content" cols="100" rows="1000" maxlength="1000" name="content" placeholder="1000자 이내로 내용을 입력하세요."></textarea>
+		        </div>
+		        <br><p> 글 작성 이후 수정은 불가능하오니, 이 점 참고해주세요.</p><br>
+	        <div id="bottom_menu">
+			    <input type="button" id="btnRegister" class="button" value="등록"/>&nbsp;
+			    <input type="button" id="btnCancel" class="button" value="취소"/>
+			</div>
+        </div><br><br><br>
+    </div>
+    
+    
+	<script>
+	window.onload = () => {
+		
+		btnRegister.addEventListener('click', async ()=> {
+			
+			const title = document.getElementById("title");
+			const content = document.getElementById("content");
+			//유효성 검사
+			if(title.value == '') {alert("제목을 입력하세요."); title.focus(); return false;}
+			if(content.value == '') {alert("내용을 입력하세요."); content.focus(); return false;}
+			
+			await fetch('/board/requestWritePost', {
+				method: 'POST',
+	            headers: {'Content-Type': 'application/json'},
+	            body: JSON.stringify({
+	                title : title.value,
+	                content: content.value,
+	                email: '[[${email}]]',
+	                status: 'PENDING'
+	            })
+			}).then((response)=> response.json())
+			  .then((data)=> {
+				  if(data.message === 'good'){
+					  alert("요청사항 등록이 완료되었습니다.");
+					  document.location.href='/board/requestList'; 
+				  } else {
+					  alert('서버 장애로 요청사항 등록에 실패했습니다.');
+				  }
+			  }).catch((error) => {
+				  console.log("error=" + error);
+			  });	  
+		});
+		
+	    const btnCancel = document.getElementById('btnCancel');
+         
+        btnCancel.addEventListener('click', () => {
+            // /board/list 페이지로 이동
+            window.location.href = '/board/requestList'; //향후 마이페이지 혹은 자신의 리스트로 변경 필요
+        });
+	}
+	
+	</script>
+	
+    <div th:replace="~{fragments/footer}"></div>
+</body>
+
+
+
+</html>

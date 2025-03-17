@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 정보 수정</title>
+<style>
+/* 기본 스타일 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #141414; /* 넷플릭스 어두운 배경 */
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* 메인 컨테이너 */
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 폼 컨테이너 */
+.ModifyForm {
+    background-color: #222222; /* 폼 배경 */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+}
+
+/* 폼 제목 */
+.ModifyForm h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #e50914; /* 넷플릭스 레드 */
+}
+
+/* 입력 필드 */
+.input_field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    background-color: #141414;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.input_field::placeholder {
+    color: #888888;
+}
+
+/* 라벨 스타일 */
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+/* 버튼 스타일 */
+.btn, .btn_modify {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn {
+    background-color: #e50914;
+    color: #ffffff;
+}
+
+.btn:hover {
+    background-color: #f40612; /* 호버 시 밝은 빨간색 */
+}
+
+.btn_modify {
+    background-color: #e50914;
+    color: #ffffff;
+}
+
+.btn_modify:hover {
+    background-color: #f40612;
+}
+
+/* 프로필 이미지 영역 */
+.imageZone {
+    width: 200px; /* 원하는 너비 */
+    height: 200px; /* 원하는 높이 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #ccc; /* 테두리 추가 (옵션) */
+    border-radius: 50%; /* 원형으로 만들고 싶을 경우 */
+    background-color: #f8f8f8; /* 배경색 (옵션) */
+}
+
+.imageZone:hover {
+    background-color: #444444;
+}
+
+.imageZone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 크기에 맞춰 자르기 */
+}
+
+/* 인증 메시지 스타일 */
+.validation-message {
+    color: red;
+    font-size: 12px;
+}
+
+/* 체크박스 및 동의 영역 */
+.agreement-container {
+    background-color: #333333;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.agreement-container label {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.agreement-container input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.optional {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 5px;
+}
+
+/* 비밀번호 확인 및 추가 입력 필드 스타일 */
+#password, #password1, #nickname, #telno {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    background-color: #141414;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+/* 버튼 - 취소*/
+button {
+    background-color: #444444;
+    color: #ffffff;
+    border: 1px solid #555555;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #555555;
+}
+
+/* 잘못된 입력에 대한 오류 메시지 스타일 */
+.invalid-feedback {
+    font-size: 12px;
+    color: red;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    .ModifyForm {
+        width: 95%;
+        padding: 20px;
+    }
+}
+</style>
+
+
+<script>   
+window.onload = () => {
+         
+   var imgCheck = "N";
+   var imgZone = document.querySelector('#imageZone');
+   var fileEvent = document.querySelector('#imageFile');
+         
+   //imageZone 영역 클릭 시 파일이벤트 처리. 자바스크립트에선 이벤트 발생 시 이벤트 정보를 담고 있는 event(e)라는 객체를 자동 생성.
+   imgZone.addEventListener('click', (e)=> {
+      fileEvent.click(e); //사용자가 만든 UI를 통해 <input type="file">을 클릭하는 것과 같은 효과를 내게 됨.
+   });
+         
+   fileEvent.addEventListener('change', (e)=> {
+      const files = e.target.files;//선택한 파일 정보가 e.target.files(배열)에 저장
+      showImage(files); 
+   })
+         
+   const showImage = (files) => {
+         imgZone.innerHTML = '';
+         const imgFile = files[0];
+
+         console.log(files.type);
+      console.log(imgFile.type);
+         if (imgFile.type.indexOf("image") < 0) {
+             alert("이미지 파일만 올려 주세요.");
+             return false;
+         }
+
+         const reader = new FileReader();
+         reader.onload = function(event) {
+             const imgElement = document.createElement('img');
+             imgElement.src = event.target.result;
+             imgElement.style.width = "100%";  // 이미지 영역에 맞게 조정
+             imgElement.style.height = "auto";
+             imgElement.style.objectFit = "contain";  // 여백 없이 맞춤
+             imgZone.appendChild(imgElement);
+         };
+
+         reader.readAsDataURL(imgFile);
+         imgCheck = "Y";
+   };
+   
+    // 생년월일 입력 여부 확인 함수
+   	function isBirthDateEntered() {
+   	    const year = document.getElementById('birth-year').value.trim();
+   	    const month = document.getElementById('birth-month').value.trim();
+   	    const day = document.getElementById('birth-day').value.trim();
+
+
+          // 연도, 월, 일을 2자리 형식으로 맞추기 (01, 02 등)
+          const formattedMonth = month.padStart(2, '0');
+          const formattedDay = day.padStart(2, '0');
+   		  const birthdate = `${year}${formattedMonth}${formattedDay}`;
+   		
+   	    if (!year || !month || !day) {
+   	        alert("생년월일을 정확히 입력해주세요.");
+   	        return false;
+   	    }
+   	    return true;
+   	}
+      
+
+   const btnModify = document.getElementById('btnModify'); 
+   const email = document.getElementById('email'); 
+   const emailValidationMessage = document.getElementById('emailValidationMessage'); 
+   const password = document.getElementById('password'); 
+   const passwordValidationMessage = document.getElementById('passwordValidationMessage'); 
+   const password1 = document.getElementById('password1'); 
+   const gender = document.querySelectorAll('input[name=gender]:checked');
+   const nickname = document.getElementById('nickname'); 
+   const nicknameValidationMessage = document.getElementById('nicknameValidationMessage'); 
+   const telno = document.getElementById('telno'); 
+   const telnoValidationMessage = document.getElementById('telnoValidationMessage'); 
+   const ModifyForm = document.getElementById('ModifyForm'); 
+   
+   let emailAvailable = false;
+   let nicknameAvailable = false;
+
+
+
+   // 닉네임 유효성 검사 및 중복 확인
+   nickname.addEventListener('input', async () => {
+       // 닉네임이 비어있지 않으면
+       if (nickname.value !== '') {
+           // 서버에서 닉네임 중복 확인 요청
+           const response = await fetch('/member/nicknameCheck', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ nickname: nickname.value })
+           });
+           const data = await response.json();
+       } else {
+           // 닉네임 입력란이 비어 있으면 메시지 지우기
+           nicknameValidationMessage.textContent = "";
+           nicknameAvailable = false; // 닉네임 사용 불가능
+       }
+   });
+
+
+   // 전화번호 유효성 검사
+   const isValidTelno = (telno) => {
+          const telnoPattern = /^\d{11,12}$/;
+          return telnoPattern.test(telno);
+   };
+   
+   telno.addEventListener('input', () => {
+          if (isValidTelno(telno.value)) {
+              telnoValidationMessage.textContent = "유효한 전화번호입니다.";
+              telnoValidationMessage.style.color = "green";
+          } else {
+              telnoValidationMessage.textContent = "숫자 11~12자리 입력해주세요.";
+              telnoValidationMessage.style.color = "red";
+          }
+   });
+
+   btnModify.addEventListener('click', async ()=> {
+      
+      if(imgCheck == 'N') {
+         alert("프로필 이미지를 등록하세요");
+         return false;
+      }      
+      
+      
+      if(nickname.value == '') {
+         alert("닉네임을 입력하세요");
+         nickname.focus();
+         return false;
+      }
+      
+   
+      if (!isValidTelno(telno.value)) {
+          alert("전화번호를 확인해주세요.");
+          telno.focus();
+          return false;
+      }
+
+      const beforeTelno = telno.value;
+      const afterTelno = beforeTelno.replace(/\-/ig,"").replace(/\ /ig,"").trim();
+      telno.value = afterTelno;
+      
+
+	  const year = document.getElementById('birth-year').value.trim();
+	  const month = document.getElementById('birth-month').value.trim();
+	  const day = document.getElementById('birth-day').value.trim();
+
+
+	  // 연도, 월, 일을 2자리 형식으로 맞추기 (01, 02 등)
+	  const formattedMonth = month.padStart(2, '0');
+	  const formattedDay = day.padStart(2, '0');
+	  const birthdate = `${year}${formattedMonth}${formattedDay}`;
+
+
+	  
+      const formData = new FormData(ModifyForm);
+	  formData.append("birthdate", birthdate);
+
+	  
+      await fetch('/member/signup', {
+            method: 'POST',
+            body: formData
+         }).then((response)=> response.json())
+            .then((data)=> {
+               if(data.message === 'good'){
+                  alert("회원 정보가 수정되었습니다.");
+                  document.location.href='/board/mypage';
+               } else {
+                  alert("서버 장애로 회원 가입에 실패했습니다.");
+               }
+         }).catch((error)=> {
+            console.log("error = " + error);
+         });      
+   });
+   
+};
+</script>
+
+</head>
+<body>
+<div class="main" align="center">
+    <div class="ModifyForm">
+      <h1>회원 정보 수정</h1><br><br>
+        <form id="ModifyForm" name="ModifyForm" method="POST" enctype="multipart/form-data">
+            <input type="file" name="fileUpload" id="imageFile" style="display:none;">
+              <div class="imageZone" id="imageZone">
+			  <img  class ="imageZone" th:src="@{'/profile/' + ${member.storedFilename}}" alt="프로필 이미지">
+               </div><br><br>
+
+			   <div>
+			      <label>이메일</label>
+			      <input type="email" id="email" name="email" class="input_field" th:value="${member.email}" readonly>
+			      <div id="emailValidationMessage" class="validation-message"></div>
+			   </div><br>
+			   
+				<div>
+					<label>이름</label>
+					<input type="text" id="username" name="username" class="input_field" th:value="${member.username}" readonly>
+				</div><br>
+				
+				<div>
+				    <label for="birth-year">생년월일</label><br>
+				    <input type="number" id="birth-year" name="birth-year" class="input_field" th:value="${member.birthdate.substring(0, 4)}" min="1900" max="2100" style="width: 80px;"> -
+				    <input type="number" id="birth-month" name="birth-month" class="input_field" th:value="${member.birthdate.substring(4, 6)}" min="1" max="12" style="width: 50px;"> -
+				    <input type="number" id="birth-day" name="birth-day" class="input_field" th:value="${member.birthdate.substring(6, 8)}" min="1" max="31" style="width: 50px;">
+				</div><br>
+				
+				<div>
+				    성별 : 
+				    <label><input type="radio" name="gender" value="남성" th:checked="${member.gender == '남성'}">남성</label>   
+				    <label><input type="radio" name="gender" value="여성" th:checked="${member.gender == '여성'}">여성</label>
+				 </div><br>
+
+				 <div>
+				    <label>닉네임</label>
+				    <input type="text" id="nickname" name="nickname" class="input_field" placeholder="닉네임" th:value="${member.nickname}" maxlength="10">
+				    <div id="nicknameValidationMessage" class="validation-message"></div>
+				 </div><br>
+
+				 <div>
+				    <label>전화번호</label>
+				    <input type="text" id="telno" name="telno" class="input_field" placeholder="전화번호" maxlength="12" th:value="${member.telno}">
+				    <div id="telnoValidationMessage" class="validation-message"></div>
+				 </div><br><br>
+					
+					<input type="hidden" id="grade" name="grade" class="input_field" th:value="${member.grade}">
+					<input type="hidden" id="point" name="point" class="input_field" th:value="${member.point}">
+					
+				<div>
+					<input type="button" id="btnModify" class="btn_modify" value="회원 수정"><br><br><br><br>
+					<button type="button" class="btn_cancel" onclick="history.back()">취소</button>
+					<input type="hidden" name="kind" value="U">
+				</div><br>
+            </div>
+        </form>
+				
+    </div>
+</div>
+</body>  
+</html>

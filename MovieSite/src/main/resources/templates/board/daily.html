@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Daily Box Office</title>
+</head>
+<body>
+	<h2>Daily Box Office Report</h2>
+
+	<table border="1">
+		<thead>
+			<tr>
+				<th>순위</th>
+				<th>순위 증가분</th>
+				<th>이름</th>
+				<th>개봉일</th>
+				<th>매출액</th>
+				<th>누적매출액</th>
+				<th>해당 일 관객수</th>
+				<th>누적 관객수</th>
+				<th>코드</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="movie : ${movies}">
+				<td th:text="${movie.rank}"></td>
+				<td th:text="${movie.rankInten}"></td>
+				<td th:text="${movie.movieNm}"></td>
+				<td th:text="${movie.openDt}"></td>
+				<td th:text="${movie.salesAmt}"></td>
+				<td th:text="${movie.salesAcc}"></td>
+				<td th:text="${movie.audiCnt}"></td>
+				<td th:text="${movie.audiAcc}"></td>
+				<td th:text="${movie.movieCd}"></td>
+			</tr>
+		</tbody>
+	</table>
+ <h1>영화 정보</h1>
+    
+    <div th:if="${movieInfo}">
+        <h2 th:text="${movieInfo.movieNm}"></h2>
+        <p>영문 제목: <span th:text="${movieInfo.movieNmEn}"></span></p>
+        <p>원제: <span th:text="${movieInfo.movieNmOg}"></span></p>
+        
+        <h3>기본 정보</h3>
+        <ul>
+            <li>영화 코드: <span th:text="${movieInfo.movieCd}"></span></li>
+            <li>상영 시간: <span th:text="${movieInfo.showTm}"></span>분</li>
+            <li>제작연도: <span th:text="${movieInfo.prdtYear}"></span></li>
+            <li>개봉일: <span th:text="${movieInfo.openDt}"></span></li>
+        </ul>
+        
+        <h3>국가</h3>
+        <ul>
+            <li th:each="nation : ${movieInfo.nations}" th:text="${nation}"></li>
+        </ul>
+        
+        <h3>장르</h3>
+        <ul>
+            <li th:each="genre : ${movieInfo.genres}" th:text="${genre}"></li>
+        </ul>
+        
+        <h3>감독</h3>
+        <ul>
+            <li th:each="director : ${movieInfo.directors}">
+                <span th:text="${director.peopleNm}"></span>
+                (<span th:text="${director.peopleNmEn}"></span>)
+            </li>
+        </ul>
+        
+        <h3>배우</h3>
+        <ul>
+            <li th:each="actor : ${movieInfo.actors}">
+                <span th:text="${actor.peopleNm}"></span>
+                (<span th:text="${actor.peopleNmEn}"></span>)
+            </li>
+        </ul>
+        
+        
+        <h3>심의 정보</h3>
+        <ul>
+            <li th:each="audit : ${movieInfo.audits}">
+                - 등급: <span th:text="${audit.watchGradeNm}"></span>
+            </li>
+        </ul>
+    </div>
+    
+    <div th:unless="${movieInfo}">
+        <p>영화 정보를 찾을 수 없습니다.</p>
+    </div>
+</body>
+</html>

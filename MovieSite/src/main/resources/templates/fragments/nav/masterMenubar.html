@@ -1,0 +1,48 @@
+<div th:fragment="masterMenubar">
+  	<div class="navbar">
+        <div class="navbar-container">
+             <h6 class="logo">Admin Page</h6>
+         
+	         <div class="menu-container">
+	             <ul class="menu-list">
+	             	<li class="menu-list-item">
+	                 	<a href="/master/dashboard">대시보드</a>
+	                 </li>
+	                 <li class="menu-list-item">
+	                 	<a href="/master/memberStats">매출/회원 통계</a>
+	                 </li>
+	                 <li class="menu-list-item">
+	                 	<a href="/master/memberRequest">회원 요청사항 관리</a>
+	                 </li>
+	                 <li class="menu-list-item">
+	                 	<a href="/master/movieStats">영화 통계</a>
+	                 </li>
+	                 <li class="menu-list-item">
+	                 	<a href="/master/movieUpload">영화 수정</a>
+	                 </li>
+	                 <li class="menu-list-item">
+	                 	<a href="/board/list">홈으로</a>
+	                 </li>
+				</ul>
+			</div>
+                  
+          	<div class="profile-container">
+          	<div class="profile-text-container">관리자 전용 페이지입니다.</div>
+            	<div class="dropdown">
+					<img class="profile-picture" src="/images/img/masterprofile.png" alt="">
+					<div class="dropdown-content">관리자
+						<a href="/member/logout">로그 아웃</a>
+						<a href="/master/dashboard">대시보드</a>
+						<a href="/master/memberStats">매출/회원 통계</a>
+	      				<a href="/master/memberRequest">회원 요청사항 관리</a>
+	      				<a href="/master/movieStats">영화 통계</a>
+	      				<a href="/master/movieUpload">영화 수정</a>
+	      				<a href="/board/list">홈으로</a>
+		       		</div>
+     			</div>
+             	
+              
+            </div>    
+        </div>
+    </div>
+</div>
